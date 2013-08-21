@@ -1,0 +1,97 @@
+<html  metal:use-macro="here/prefs_main_template/macros/master">
+	<head>
+		
+		
+	</head>
+	<body>
+        <div id='content' metal:fill-slot="prefs_configlet_content">
+
+        		<style type="text/css">
+        			.import-comissao table {
+        				width: 100%;
+        			}
+
+        		</style>
+
+        		<div metal:use-macro="context/global_statusmessage/macros/portal_message">
+				    Status message
+				</div>
+
+				<div class="import-comissao">
+                    <h1>Comissões</h1>
+                    <br />
+
+					<!-- TODO Arumar label-->
+                    <h3>Importação do usuarios</h3>
+                    <form method="post" enctype="multipart/form-data" tal:attributes="action string:${context/portal_url|nothing}/importar-comissao">
+                       	<input type="file" name="txt_file" size="30" accept="csv">
+                       	<input type="submit" name="importa_usuario" value="Importar">
+                    </form>
+					<br />
+
+					<h4>Ultimas importações</h4>
+					<div id="last_import_usuario">
+						<table class="listing">
+							<tr>
+								<th>ID</th>
+								<th>Competencia</th>
+								<th>Data da Importação</th>
+								<th>Revover Lote ?</th>
+							</tr>
+
+							<tal:rep repeat="item view/list_import_usuario">
+
+								<tr>
+									<td tal:content="item/sequencia">ID</td>
+									<td tal:content="item/competencia">competencia</td>
+									<td tal:content="item/date_created">Data da Importação</td>
+									<td>Revover Lote ?</td>
+								</tr>							
+
+							</tal:rep>
+
+
+						</table>
+
+					</div>
+
+
+					<!-- TODO Arumar label-->
+					<h3>Importação das vendas</h3>
+                    <form method="post" enctype="multipart/form-data" tal:attributes="action string:${context/portal_url|nothing}/importar-comissao">
+                       	<input type="file" name="txt_file" size="30" accept="csv">
+                       	<input type="submit" name="importa_venda" value="Importar">
+                    </form>
+					<br />
+					
+					<h4>Ultimas importações</h4>
+					<div id="last_import_venda">
+						<table class="listing">
+							<tr>
+								<th>ID</th>
+								<th>Competencia</th>
+								<th>Data da Importação</th>
+								<th>Revover Lote ?</th>
+							</tr>
+
+							<tal:rep repeat="item view/list_import_venda">
+
+								<tr>
+									<td tal:content="item/sequencia">ID</td>
+									<td tal:content="item/competencia">competencia</td>
+									<td tal:content="item/date_created">Data da Importação</td>
+									<td>Revover Lote ?</td>
+								</tr>							
+
+							</tal:rep>
+
+
+						</table>
+
+					</div>
+
+				</div>
+
+		</div>  
+	</body>
+</html>

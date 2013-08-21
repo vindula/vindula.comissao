@@ -1,0 +1,308 @@
+<html  metal:use-macro="here/main_template/macros/master">
+	<head>
+        <metal:block fill-slot="top_slot">
+            <tal:dummy tal:define="dummy python:request.set('disable_border',1);
+                                   disable_column_one python:request.set('disable_plone.leftcolumn',1);
+                                   disable_column_two python:request.set('disable_plone.rightcolumn',1);" />
+        </metal:block> 
+
+        <metal:styleslot fill-slot="style_slot">
+    		<link rel="stylesheet" href="" type="text/css" tal:attributes="href string:${view/static_url}/css/style.css">
+		</metal:styleslot>
+		
+	</head>
+	<body>
+		<div metal:fill-slot="content" >
+		    
+		    <metal:use use-macro="context/@@myvindulapanel/macros/page"/>   
+		    
+		    <div id="content" tal:define="validUser view/validateUser;">
+	    		
+	    		<h2> Minhas Comissões</h2>
+				<br/>
+
+				<div metal:use-macro="context/global_statusmessage/macros/portal_message">
+				     Status message
+			    </div>
+				
+				<tal:cond condition="not: validUser">
+                    <form action="minha-comissao" method="post">
+						<h3>Valide seu CPF para acessar as Comissões</h3>
+						<div class="marginBtTp10px">
+	                        <label>Número do CPF</label>
+							<div class="formHelp">Digite o número do seu CPF.</div>
+	                        <input type="text" name="cpf_validate" id="cpf_validate" /><br />
+							
+						</div>
+						<div class="bt_reservas">
+							<input type="submit" name="submitted_cpf" id="submitted_cpf" value="Validar CPF" />
+						</div>
+                    </form>
+                </tal:cond>
+
+				<div id="my_comissoes"
+					 tal:condition="validUser"
+					 tal:define="comissao view/comissao|nothing;
+					 			 prefs_user view/prefs_user|nothing" >
+
+					<div class="row boderbootom">
+						<div class="cell width-1:2 position-0">
+							<div id="logo" tal:define="portal python: context.portal_url.getPortalObject();
+                        							   config_obj python: portal['control-panel-objects']['ThemeConfig'];">
+                
+				                <img tal:condition="config_obj/getLogoCabecalho" height="60px" 
+				                     tal:attributes="src python: config_obj.getLogoCabecalho().absolute_url() or None" />
+				        
+				                <img tal:condition="not: config_obj/getLogoCabecalho" height="60px"
+				                     src="/++resource++vindula.controlpanel/imagens/logo_topo.png" />   
+				                
+				            </div> 
+							<h3>Comissão de Vendas - Extrato Fechamento</h3>
+						</div>
+						<div class="cell width-1:2 position-1:2 textbottom" >
+							<h4>Consultor: <span tal:replace="prefs_user/name" /></h4>
+							<h4>CPF: <span tal:replace="prefs_user/cpf|prefs_user/teaching_research" /> </h4>
+						</div>
+
+					</div>
+
+					<div class="row marginbottom">
+						<div class="cell width-1:3 position-0">
+							<h3>Competencia: <span tal:replace="comissao/competencia" /></h3>
+						</div>
+						<div class="cell width-1:3 position-1:3">
+							<h3 class="center">Equipe: <span tal:replace="comissao/equipe" /></h3>
+						</div>
+						<div class="cell width-1:3 position-2:3">
+							<h3>Matrícula: <span tal:replace="nothing" /></h3>
+						</div>
+
+					</div>
+
+					<div class="row boderbootom">
+						<div class="cell width-6 position-0">
+
+							<table>
+								<tr >
+									<th class="blackwhite head"
+									 	colspan="5">Painel Resultados - Pontos e Metas Atingidos</th>	
+								</tr>
+								<tr>
+									<td class="bluewhite"
+										colspan="4">Pontos Vendas</td>
+									<td class="grayblack">Comissão</td>
+								</tr>
+								<tr>
+									<td class="lightbluebalck">Bonus</td>
+									<td class="lightbluebalck">Mensal</td>
+									<td class="blue2balck">Total</td>
+									<td class="blackwhite" >Meta</td>
+									<td class="grayblack" >Valor Inicial</td>
+								</tr>
+								<tr>
+									<td tal:content="comissao/pv_bonus">0</td>
+									<td tal:content="comissao/pv_mensal">5790</td>
+									<td tal:content="comissao/pv_total">5790</td>
+									<td tal:content="comissao/pv_meta">ouro</td>
+									<td tal:content="comissao/valor_inicial">289,50</td>
+								</tr>
+
+							</table>
+						</div>
+						<div class="cell width-6 position-6">
+							
+							<table>
+								<tr>
+									<th class="blackwhite head" colspan="5">Painel Comissões - Meta Adicionais</th>
+								</tr>
+								<tr>
+									<td class="bluewhite">Adicional 1</td>
+									<td class="graywhite">Faltas</td>
+									<td class="graywhite">Atrasos</td>
+									<td class="blackwhite" >Direito</td>
+									<td class='grayblack'>Valor</td>
+								</tr>
+								<tr>
+									<td>ABS</td>
+									<td tal:content="comissao/faltas">0</td>
+									<td tal:content="comissao/atrasos">0</td>
+									<td></td>
+									<td tal:content="comissao/adicional1">200</td>
+								</tr>
+								<tr>
+									<td class="bluewhite">Adicional 2</td>
+									<td class="graywhite" colspan="2" >HS</td>
+									<td class="blackwhite" >Direto</td>
+									<td class='grayblack'>Valor</td>
+								</tr>
+								<tr>
+									<td>Anti-Fraude</td>
+									<td colspan="2" tal:content="comissao/head_shot">0</td>
+									<td></td>
+									<td tal:content="comissao/adicional2">200</td>
+								</tr>
+								<tr>
+									<td class="bluewhite">Adicional 3</td>
+									<td class="graywhite" colspan="2"> % Desist. BV</td>
+									<td class="blackwhite" >Direito</td>
+									<td class='grayblack'>Valor</td>
+								</tr>
+								<tr>
+									<td>Desistente BV</td>
+									<td colspan="2" tal:content="comissao/bv_porcentagem">18%</td>
+									<td></td>
+									<td tal:content="comissao/adicional3">450</td>
+								</tr>
+								<tr>
+									<td class="bluewhite">Adicional 4</td>
+									<td class="graywhite" >Prop.</td>
+									<td class="graywhite">Média/Dia</td>
+									<td class="blackwhite" >Direito</td>
+									<td class='grayblack'>Valor</td>
+								</tr>	
+								<tr>
+									<td>Meta Proposta</td>
+									<td tal:content="comissao/q_proposta">159</td>
+									<td tal:content="comissao/media_dia">7</td>
+									<td></td>
+									<td tal:content="comissao/adicional4">200</td>
+								</tr>
+								<tr>
+									<td class="bluewhite">Adicional 5</td>
+									<td class="graywhite" colspan="2"> </td>
+									<td class="blackwhite" >Direito</td>
+									<td class='grayblack' >Valor</td>
+								</tr>
+								<tr>
+									<td>Ticket Médio</td>
+									<td colspan="2" tal:content="comissao/ticket"></td>
+									<td></td>
+									<td tal:content="comissao/adicional5">800</td>
+								</tr>
+							</table>
+						
+						</div>
+						<div class="cell width-4 position-12">
+
+							<table>
+								<tr>
+									<td class="grayblack" colspan="2">Meta Equipe</td>
+								</tr>
+								<tr>
+									<td class="blackwhite" >Meta</td>
+									<td class="blackwhite" >%</td>
+								</tr>
+								<tr>
+									<td tal:content="comissao/me_meta">Não</td>
+									<td tal:content="string:${comissao/me_porcentagem}%">0%</td>
+								</tr>
+							</table>
+						
+							<br/> <br/>
+
+							<table>
+								<tr>
+									<td class="grayblack" colspan="3">Comissão</td>
+								</tr>
+								<tr>
+									<td class="blackwhite" >Valor Inicial</td>
+									<td class="blackwhite" >Total Adicionais</td>
+									<td class="blackwhite" >Total á Receber</td>
+								</tr>
+								<tr>
+									<td tal:content="comissao/valor_inicial">250</td>
+									<td>2316</td>
+									<td tal:content="comissao/valor_final">2605</td>
+								</tr>
+							</table>
+
+						</div>
+					</div>
+				
+					<div class="row">
+						<h3>VENDAS VALIDAS COMISSÃO</h3>
+						<p>** São as vendas da competencia implantadas que serão considerados as pontuações para efeito de comissionamento.</p>
+
+						<table class="listing">
+							<tr>
+								<th class="head" >Equipe Valida</th>
+								<th class="head">Consultor</th>
+								<th class="head">CPF</th>
+								<th class="head">Nome Cliente</th>
+								<th class="head">Data Atendimento</th>
+								<th class="head">Situações</th>
+								<th class="head">Situações Financeiro</th>
+								<th class="head">Total</th>
+							</tr>
+							
+							<tal:rep repeat="item comissao/vendas_validas|python:[]">
+								<tr>
+									<td tal:content="comissao/equipe">equipe</td>
+									<td tal:content="prefs_user/name"></td>
+									<td tal:content="item/cpf">cpf</td>
+									<td tal:content="item/nome_cliente">nome</td>
+									<td tal:content="item/data_atd">data</td>
+									<td tal:content="item/situacao">situaçao</td>
+									<td tal:content="item/situacao_financeiro">situação fina</td>
+									<td tal:content="item/pontos">pontos</td>
+								</tr>	
+							</tal:rep>
+						</table>
+
+					</div>
+					<div class="row">
+						<h3>VENDAS NÃO CONSIDERADAS</h3>
+
+						<table class="listing">
+							<tr>
+								<td>Equipe Valida</td>
+								<td>Consultor</td>
+								<td>CPF</td>
+								<td>Nome Cliente</td>
+								<td>Data Atendimento</td>
+								<td>Situações</td>
+								<td>Situações Financeiro</td>
+								<td>Total</td>
+							</tr>
+							
+							<tal:rep repeat="item comissao/vendas_invalidas|python:[]">
+								<tr>
+									<td tal:content="comissao/equipe">equipe</td>
+									<td tal:content="prefs_user/name"></td>
+									<td tal:content="item/cpf">cpf</td>
+									<td tal:content="item/nome_cliente">nome</td>
+									<td tal:content="item/data_atd">data</td>
+									<td tal:content="item/situacao">situaçao</td>
+									<td tal:content="item/situacao_financeiro">situação fina</td>
+									<td tal:content="item/pontos">pontos</td>
+								</tr>	
+							</tal:rep>
+						</table>
+
+					</div>
+					<div class="row">
+						<h3>Regras Meta Geral de acordo com Tabela: Competência: <span tal:replace="comissao/competencia" /></h3>
+						<p>
+							3.1 - Vendas que não forem aprovadas pelo Banco GMAC serão desconsideradas de qualquer nível de meta;<br />
+							3.2 - Vendas canceladas na operação ou desistentes na GMAC até a apuração da comissão serão desconsideradas;<br />
+							3.3 - Os reprovados GM que forem implantados nos produtos Ancora ou Yamaha vão valer 50% da pontuação da carta da GM;<br />
+							3.4 - Regra Adicional 1: 3.4.1 - Não havendo faltas injustificadas e/ou sansão disciplinar por atrasos, o consultor fará jus ao adicional 1 - O período de apuração dos Adicional 1 acompanha a FOLHA DE PONTO (21 a 20);<br />
+							3.5 - Regra Adicional 2: 3.5.1 - Não havendo sansão disciplinar do departamento de Anti-fraude, o consultor fará jus ao adicional 2<br />
+							3.6 - Regra Adicional 3: 3.6.1 - Não havendo uma queda maior que 15% na auditoria de boas vindas, o consultor fará jus ao adicional 3<br />
+							3.7 - Regra Adicional 4: 3.7.1 - O consultor que bater a meta de propostas do mês fará jus ao adicional 4;<br />
+							3.8 - Regra Adicional 5: 3.7.8 - O consultor que bater a meta de ticket médio do mês fará jus ao adicional 5;<br />
+						</p>
+						<h3>
+							ESTE EXTRATO REPRESENTA A CONFERÊNCIA DAS VENDAS DO MÊS APURADO. É DE RESPONSABILIDADE DO CONSULTOR CONFERIR SUAS VENDAS NO PERÍODO DA CONFERÊNCIA. <br />
+							SE HOUVER ALGUMA DIVERGENCIA PROCURAR EM SEU EXTRATO DE CONFERÊNCIA E OU INFORMAR AO SEU GESTOR RESPONSÁVEL PARA QUE SEJA LEVADO PARA AVALIAÇÃO DE CORREÇÃO.
+						</h3>
+					</div>
+					<div class="visualClear"></div>
+				
+				</div>
+		    </div>
+			<div class="visualClear"></div>
+
+		</div>  
+	</body>
+</html>

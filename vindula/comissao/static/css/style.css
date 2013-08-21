@@ -1,0 +1,90 @@
+/*
+	Minhas Comissões
+
+*/
+#submitted_cpf {
+	padding-left: 8px;
+	padding-top: 9px;
+}
+
+#my_comissoes{
+	font-size: 12px;
+	border: #000 solid 2px;
+	padding: 5px;
+}
+
+#my_comissoes table{
+	width: 100%;
+}
+#my_comissoes table tr th{
+	border: #000 solid 1px;
+}
+
+#my_comissoes table tr td{
+	padding: 5px;
+	text-align: center;
+	border: #000 solid 1px;
+}
+
+.textbottom{
+	position: absolute !important;
+	bottom: 0;
+	text-align: center;
+}	
+
+.boderbootom{
+	border-bottom: #000 solid 1px;
+}
+.marginbottom{
+	margin-bottom:5px;
+}
+
+.head{
+	padding: 5px;
+	text-align: center;
+}
+
+.blackwhite{
+	background: #000;
+	color: #fff;
+}
+/*.geral{
+	text-align: center;
+	font-weight: bolder;
+	padding: 2px;	
+}*/
+
+.bluewhite{
+	color: #fff;
+	background: #000D71;
+}
+
+.blueblack{
+	color: #000;
+	background: #000D71;
+}
+
+.graywhite{
+	color: #fff;
+	background: #C0C0C0;
+}
+
+.grayblack{
+	color: #000;
+	background: #C0C0C0;
+}
+.lightbluebalck{
+	color: #000;
+	background: #66CCFF;
+}
+.blue2balck{
+	color: #000;
+	background: #0066FF;
+}
+
+.center{
+	text-align: center;
+}
+.right {
+	text-align: right;
+}
