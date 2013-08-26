@@ -1,10 +1,12 @@
 # coding: utf-8
 from five import grok
 from zope.interface import Interface
+from Products.statusmessages.interfaces import IStatusMessage
 
 from Products.CMFCore.utils import getToolByName
 
 from vindula.myvindula.tools.utils import UtilMyvindula
+from vindula.comissao import MessageFactory as _
 from vindula.comissao.models.comissao_usuario import ComissaoUsuario
 
 from datetime import date, datetime, timedelta
@@ -35,12 +37,9 @@ class MyComissaoView(grok.View, UtilMyvindula):
         except:pass
 
         # import pdb;pdb.set_trace()
-        # comissoes = ComissaoUsuario().get_comissao_by_cpf(cpf)
-        comissoes = ComissaoUsuario().get_comissao_by_cpf(u'347.707.058-59')
-
+        comissoes = ComissaoUsuario().get_comissao_by_cpf(cpf)
 
         self.comissao = comissoes.last() 
-
 
 
     def validateUser(self):

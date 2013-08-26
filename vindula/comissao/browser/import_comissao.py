@@ -42,6 +42,16 @@ class ImportComissaoView(grok.View):
 			if self.retorno_import:
 				IStatusMessage(self.request).addStatusMessage(_(u'Forão importados %s registros.'% self.retorno_import ),"info")				
 
+		elif 'sequencia' in form.keys():
+			sequencia = int(form.get('sequencia','0'))
+			if sequencia and 'remove_usuario' in form.keys():
+				ComissaoUsuario().remove_sequencia_usuario(sequencia)
+				IStatusMessage(self.request).addStatusMessage(_(u'Foi removido com sucesso o bloco'),"info")
+
+			elif sequencia and 'remove_venda' in form.keys():
+				ComissaoVenda().remove_sequencia_venda(sequencia)
+				IStatusMessage(self.request).addStatusMessage(_(u'Foi removido com sucesso o bloco'),"info")
+
 		
 	def list_import_venda(self):
 		return ComissaoVenda().get_bloco_importacao_venda()

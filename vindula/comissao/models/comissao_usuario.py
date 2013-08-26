@@ -4,6 +4,7 @@
 #Imports regarding the connection of the database 'strom'
 from storm.locals import *
 from vindula.comissao.models import ComissaoBase
+from vindula.comissao.models.comissao_venda import ComissaoVenda
 
  
 class ComissaoUsuario(Storm,ComissaoBase):
@@ -43,10 +44,10 @@ class ComissaoUsuario(Storm,ComissaoBase):
 
 	@property
 	def vendas(self):
-		sequencia_atual = self.store.find(ComissaoVenda).max(ComissaoVenda.sequencia) or 0
-		comissao = self.store.find(ComissaoVenda, ComissaoVenda.ci_usuario==self.ci,
-												  ComissaoVenda.competencia==self.competencia,
-												  ComissaoVenda.sequencia==sequencia_atual).order_by(ComissaoVenda.data_atd)
+		sequencia_atual = ComissaoVenda().store.find(ComissaoVenda).max(ComissaoVenda.sequencia) or 0
+		comissao = ComissaoVenda().store.find(ComissaoVenda, ComissaoVenda.ci_usuario==self.ci,
+											  ComissaoVenda.competencia==self.competencia,
+											  ComissaoVenda.sequencia==sequencia_atual).order_by(ComissaoVenda.data_atd)
 		return comissao
 
 	@property
@@ -62,6 +63,14 @@ class ComissaoUsuario(Storm,ComissaoBase):
 	def next_sequencia(self):
 		numero_atual = self.store.find(ComissaoUsuario).max(ComissaoUsuario.sequencia) or 0
 		return numero_atual + 1
+
+	def remove_sequencia_usuario(self, sequencia):
+		results = self.store.find(ComissaoUsuario, ComissaoUsuario.sequencia==sequencia)
+
+		if results.count() > 0:
+			for result in results:
+				self.store.remove(result)
+				self.store.flush()
 
 	def manage_comissao_usuario(self, **kwargs):
 		# competencia = kwargs.get('competencia') 		

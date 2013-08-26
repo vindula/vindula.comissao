@@ -5,7 +5,7 @@
 from storm.locals import *
 from vindula.comissao.models import ComissaoBase
 
-from vindula.comissao.models.comissao_usuario import ComissaoUsuario
+# from vindula.comissao.models.comissao_usuario import ComissaoUsuario
 
  
 class ComissaoVenda(Storm, ComissaoBase):
@@ -23,7 +23,7 @@ class ComissaoVenda(Storm, ComissaoBase):
 	status = Bool()
 	pontos = Int()
 	# comissao_usuario_id = Int()
-	data_created = DateTime()
+	date_created = DateTime()
 	date_modified = DateTime()
 
 	# comissao_usuario = Reference(comissao_usuario_id, "ComissaoUsuario.id")
@@ -62,6 +62,15 @@ class ComissaoVenda(Storm, ComissaoBase):
 		comissao_venda = ComissaoVenda(**kwargs)
 		self.store.add(comissao_venda)
 		self.store.flush()
+
+	def remove_sequencia_venda(self, sequencia):
+		results = self.store.find(ComissaoVenda, ComissaoVenda.sequencia==sequencia)
+
+		if results.count() > 0:
+			for result in results:
+				self.store.remove(result)
+				self.store.flush()
+
 
 	def get_bloco_importacao_venda(self):
 		select = Select(ComissaoVenda.sequencia,
