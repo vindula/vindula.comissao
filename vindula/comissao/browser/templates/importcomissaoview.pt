@@ -111,7 +111,42 @@
 						</table>
 
 					</div>
+					<br />
+					<div id="regras_gerais">
 
+						<h4>Informa quais são as regras gerais do relatorio de comições</h4>
+						<form method="post" >
+								<script type="text/javascript">
+									 $j(document).ready(function(){
+
+										ckid = $j('#area_regras_gerais').attr('id');
+								        cke_config_url = jQuery('.cke_config_url', $j('#area_regras_gerais').parent()).val();
+								        if (!CKEDITOR.instances)
+								            CKInstances($j('#area_regras_gerais'));
+								        else if (!CKEDITOR.instances[ckid]){
+								            CKInstances($j('#area_regras_gerais'));
+								        }
+									 });
+
+								</script>
+							 
+								<input class="cke_config_url" type="hidden" name="cke_config_url" tal:attributes="value string:${context/portal_url}/ckeditor_plone_config.js">
+		                        <input class="cke_iswidget" type="hidden" value="True" name="cke_iswidget">
+		                        
+		                        <div class="widget_settings">
+		                            <input class="cke_baseHref" type="hidden" name="cke_baseHref" tal:attributes="value string:${context/portal_url}" >
+		                            <input class="cke_height" type="hidden" value="310px" name="cke_height">
+		                        </div>
+	                 		
+	                        <textarea style="width: 100%; height: 250px;" name="text_regras_gerais" id='area_regras_gerais'
+	                        		  class="ckeditor_plone_custom" tal:content="view/get_regras_gerais|string: ">
+	                        	
+	                        </textarea>
+							<input type="submit" name="regras_gerais" value="Salvar Regras">
+						</form>	
+
+					</div>
+	
 				</div>
 
 		</div>  

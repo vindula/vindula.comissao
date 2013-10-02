@@ -31,7 +31,15 @@
       description="Extension profile for vindula.comissao"
       provides="Products.GenericSetup.interfaces.EXTENSION"
       />
-
+    
+  <!--  
+    <browser:page
+        name="comissao-controlpanel"
+        for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+        permission="cmf.ManagePortal"
+        class=".register.page.ComissaoEditView"
+    />
+  -->
   <!-- -*- extra stuff goes here -*- -->
 
 </configure>

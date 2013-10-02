@@ -43,9 +43,42 @@
 				<div id="my_comissoes"
 					 tal:condition="validUser"
 					 tal:define="comissao view/comissao|nothing;
+					 			 comissoes view/comissoes|python:[];
+					 			 req_competencia request/id|nothing;
 					 			 prefs_user view/prefs_user|nothing" >
 
 					<tal:cond condition="comissao|nothing" >
+		
+<!-- 						<div> 
+							<script type="text/javascript">
+
+								$(document).ready(function () {
+
+									$('#select-comissao').change(function(){
+										var portal_url = $j('base').attr('href'),
+											competencia = this.value;
+
+											window.location.href = portal_url+'/minha-comissao?id='+competencia;
+									});
+
+								});
+
+
+							</script>
+							
+							<select id="select-comissao" name="select-comissao">
+	                            <option value="">Competência</option>
+	                            <tal:rep repeat="opt comissoes">
+	                                <option tal:define="value_sel opt/id|nothing;
+	                                					comp opt/competencia|nothing"
+	                                		tal:attributes="value value_sel;
+	                                						selected python: value_sel==req_competencia and 'selected' or ''"
+	                                        tal:condition="comp"
+	                                        tal:content="comp" />
+	                            </tal:rep>
+	                        </select>
+						</div> -->
+
 						<div class="row boderbootom">
 							<div class="cell width-1:2 position-0">
 								<div id="logo" tal:define="portal python: context.portal_url.getPortalObject();
@@ -102,7 +135,7 @@
 										<td tal:content="comissao/pv_mensal|string: ">5790</td>
 										<td tal:content="comissao/pv_total|string: ">5790</td>
 										<td tal:content="comissao/pv_meta|string: ">ouro</td>
-										<td tal:content="comissao/valor_inicial|string: ">289,50</td>
+										<td tal:content="python: view.format_moeda(comissao.valor_inicial)">289,50</td>
 									</tr>
 
 								</table>
@@ -125,7 +158,7 @@
 										<td tal:content="comissao/faltas|string: ">0</td>
 										<td tal:content="comissao/atrasos|string: ">0</td>
 										<td></td>
-										<td tal:content="comissao/adicional1|string: ">200</td>
+										<td tal:content="python:view.format_moeda(comissao.adicional1)">200</td>
 									</tr>
 									<tr>
 										<td class="bluewhite">Adicional 2</td>
@@ -137,7 +170,7 @@
 										<td>Anti-Fraude</td>
 										<td colspan="2" tal:content="comissao/head_shot|string: ">0</td>
 										<td></td>
-										<td tal:content="comissao/adicional2|string: ">200</td>
+										<td tal:content="python:view.format_moeda(comissao.adicional2)">200</td>
 									</tr>
 									<tr>
 										<td class="bluewhite">Adicional 3</td>
@@ -149,7 +182,7 @@
 										<td>Desistente BV</td>
 										<td colspan="2" tal:content="comissao/bv_porcentagem|string: ">18%</td>
 										<td></td>
-										<td tal:content="comissao/adicional3|string: ">450</td>
+										<td tal:content="python:view.format_moeda(comissao.adicional3)">450</td>
 									</tr>
 									<tr>
 										<td class="bluewhite">Adicional 4</td>
@@ -163,7 +196,7 @@
 										<td tal:content="comissao/q_proposta|string: ">159</td>
 										<td tal:content="comissao/media_dia|string: ">7</td>
 										<td></td>
-										<td tal:content="comissao/adicional4|string: ">200</td>
+										<td tal:content="python:view.format_moeda(comissao.adicional4)">200</td>
 									</tr>
 									<tr>
 										<td class="bluewhite">Adicional 5</td>
@@ -175,7 +208,7 @@
 										<td>Ticket Médio</td>
 										<td colspan="2" tal:content="comissao/ticket|string: "></td>
 										<td></td>
-										<td tal:content="comissao/adicional5|string: ">800</td>
+										<td tal:content="python:view.format_moeda(comissao.adicional5)">800</td>
 									</tr>
 								</table>
 							
@@ -209,9 +242,9 @@
 										<td class="blackwhite" >Total á Receber</td>
 									</tr>
 									<tr>
-										<td tal:content="comissao/valor_inicial|string: ">250</td>
+										<td tal:content="python:view.format_moeda(comissao.valor_inicial)">250</td>
 										<td>2316</td>
-										<td tal:content="comissao/valor_final|string: ">2605</td>
+										<td tal:content="python: view.format_moeda(comissao.valor_final)">2605</td>
 									</tr>
 								</table>
 
@@ -232,21 +265,28 @@
 									<th class="head">Situações</th>
 									<th class="head">Situações Financeiro</th>
 									<th class="head">Total</th>
+									<th class="head">Analisar</th>
 								</tr>
 								
 								<tal:rep repeat="item comissao/vendas_validas|python:[]">
 									<tr>
 										<td tal:content="comissao/equipe|string: ">equipe</td>
 										<td tal:content="prefs_user/name|string: "></td>
-										<td tal:content="item/cpf|string: ">cpf</td>
+										<td tal:content="python: view.format_cpf(item.cpf)">cpf</td>
 										<td tal:content="item/nome_cliente|string: ">nome</td>
-										<td tal:content="item/data_atd|string: ">data</td>
+										<td tal:content="python: view.format_data(item.data_atd)">data</td>
 										<td tal:content="item/situacao|string: ">situaçao</td>
 										<td tal:content="item/situacao_financeiro|string: ">situação fina</td>
 										<td tal:content="item/pontos|string: ">pontos</td>
+										<td>
+											<a href="" tal:attributes="href string: ${context/absolute_url}/gerenciar-comissoes?cpf_cliente=${item/cpf}&vendedor=${prefs_user/name}">Enviar</a>
+										</td>
 									</tr>	
 								</tal:rep>
 							</table>
+							<h3>Para Adicionar uma venda não contabilizada <a href="" tal:attributes="href string: ${context/absolute_url}/gerenciar-comissoes?vendedor=${prefs_user/name}">Clique aqui</a>
+							</h3>
+							<br/>
 
 						</div>
 						<div class="row">
@@ -262,39 +302,36 @@
 									<td>Situações</td>
 									<td>Situações Financeiro</td>
 									<td>Total</td>
+									<th class="head">Analisar</th>
 								</tr>
 								
 								<tal:rep repeat="item comissao/vendas_invalidas|python:[]">
 									<tr>
 										<td tal:content="comissao/equipe|string: ">equipe</td>
 										<td tal:content="prefs_user/name|string: "></td>
-										<td tal:content="item/cpf|string: ">cpf</td>
+										<td tal:content="python: view.format_cpf(item.cpf)">cpf</td>
 										<td tal:content="item/nome_cliente|string: ">nome</td>
-										<td tal:content="item/data_atd|string: ">data</td>
+										<td tal:content="python: view.format_data(item.data_atd)">data</td>
 										<td tal:content="item/situacao|string: ">situaçao</td>
 										<td tal:content="item/situacao_financeiro|string: ">situação fina</td>
 										<td tal:content="item/pontos|string: ">pontos</td>
+										<td>
+											<a href="" tal:attributes="href string: ${context/absolute_url}/gerenciar-comissoes?cpf_cliente=${item/cpf}&vendedor=${prefs_user/name}">Enviar</a>
+										</td>
 									</tr>	
 								</tal:rep>
 							</table>
+							<h3>Para Adicionar uma venda não contabilizada <a href="" tal:attributes="href string: ${context/absolute_url}/gerenciar-comissoes?vendedor=${prefs_user/name}">Clique aqui</a>
+							</h3>
+							<br/>
 
 						</div>
 						<div class="row">
 							<h3>Regras Meta Geral de acordo com Tabela: Competência: <span tal:replace="comissao/competencia|string: " /></h3>
-							<p>
-								3.1 - Vendas que não forem aprovadas pelo Banco GMAC serão desconsideradas de qualquer nível de meta;<br />
-								3.2 - Vendas canceladas na operação ou desistentes na GMAC até a apuração da comissão serão desconsideradas;<br />
-								3.3 - Os reprovados GM que forem implantados nos produtos Ancora ou Yamaha vão valer 50% da pontuação da carta da GM;<br />
-								3.4 - Regra Adicional 1: 3.4.1 - Não havendo faltas injustificadas e/ou sansão disciplinar por atrasos, o consultor fará jus ao adicional 1 - O período de apuração dos Adicional 1 acompanha a FOLHA DE PONTO (21 a 20);<br />
-								3.5 - Regra Adicional 2: 3.5.1 - Não havendo sansão disciplinar do departamento de Anti-fraude, o consultor fará jus ao adicional 2<br />
-								3.6 - Regra Adicional 3: 3.6.1 - Não havendo uma queda maior que 15% na auditoria de boas vindas, o consultor fará jus ao adicional 3<br />
-								3.7 - Regra Adicional 4: 3.7.1 - O consultor que bater a meta de propostas do mês fará jus ao adicional 4;<br />
-								3.8 - Regra Adicional 5: 3.7.8 - O consultor que bater a meta de ticket médio do mês fará jus ao adicional 5;<br />
-							</p>
-							<h3>
-								ESTE EXTRATO REPRESENTA A CONFERÊNCIA DAS VENDAS DO MÊS APURADO. É DE RESPONSABILIDADE DO CONSULTOR CONFERIR SUAS VENDAS NO PERÍODO DA CONFERÊNCIA. <br />
-								SE HOUVER ALGUMA DIVERGENCIA PROCURAR EM SEU EXTRATO DE CONFERÊNCIA E OU INFORMAR AO SEU GESTOR RESPONSÁVEL PARA QUE SEJA LEVADO PARA AVALIAÇÃO DE CORREÇÃO.
-							</h3>
+							<div tal:content="structure view/getRegrasGerais|string: ">
+								Regras gerais
+							</div>
+
 						</div>
 						<div class="visualClear"></div>
 					
@@ -303,13 +340,11 @@
 						<div>
 							<h3>Voce não possui comissões </h3>
 						</div>
-
 					</tal:cond>
 
 				</div>
 		    </div>
 			<div class="visualClear"></div>
-
 		</div>  
 	</body>
 </html>

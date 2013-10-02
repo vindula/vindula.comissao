@@ -3,12 +3,17 @@ from five import grok
 from zope.interface import Interface
 from Products.statusmessages.interfaces import IStatusMessage
 
+from zope.component import getUtility
+from plone.registry.interfaces import IRegistry
+
 from vindula.comissao.tools import convert_csv2list_dict, convert_str2int,\
 								   convert_str2decimal, convert_str2unicode, convert_str2date
 
 from vindula.comissao import MessageFactory as _
 from vindula.comissao.models.comissao_usuario import ComissaoUsuario
 from vindula.comissao.models.comissao_venda import ComissaoVenda
+
+import transaction
 
 grok.templatedir('templates')
 
@@ -52,6 +57,16 @@ class ImportComissaoView(grok.View):
 				ComissaoVenda().remove_sequencia_venda(sequencia)
 				IStatusMessage(self.request).addStatusMessage(_(u'Foi removido com sucesso o bloco'),"info")
 
+		elif 'regras_gerais' in form.keys():
+			regras_gerais = form.get('text_regras_gerais','')
+			
+			settings_comissao = self.get_register_regras_gerais()
+			settings_comissao.value = unicode(regras_gerais, 'utf-8')
+			
+			transaction.commit()
+
+			IStatusMessage(self.request).addStatusMessage(_(u'As regras gerais foram salvas com sucesso.'),"info")
+
 		
 	def list_import_venda(self):
 		return ComissaoVenda().get_bloco_importacao_venda()
@@ -60,6 +75,24 @@ class ImportComissaoView(grok.View):
 	def list_import_usuario(self):
 		return ComissaoUsuario().get_bloco_importacao_comissao()
 		
+
+	def get_register_regras_gerais(self):
+		registry = getUtility(IRegistry)
+		try:
+			settings_comissao = registry.records['vindula.comissao.register.interfaces.IVindulaComissao.regras_comissoes']
+		except:
+			settings_comissao = False		
+
+		return settings_comissao
+
+	def get_regras_gerais(self):
+		settings_comissao = self.get_register_regras_gerais()
+
+		if settings_comissao:
+			return settings_comissao.value
+		else:
+			return ""
+
 
 	def import_usuarios(self,rows):
 		dados_import = convert_csv2list_dict(rows)
