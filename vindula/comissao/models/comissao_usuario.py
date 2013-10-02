@@ -44,7 +44,8 @@ class ComissaoUsuario(Storm,ComissaoBase):
 
 	@property
 	def vendas(self):
-		sequencia_atual = ComissaoVenda().store.find(ComissaoVenda).max(ComissaoVenda.sequencia) or 0
+		sequencia_atual = ComissaoVenda().store.find(ComissaoVenda,
+												 	 ComissaoVenda.competencia==self.competencia).max(ComissaoVenda.sequencia) or 0
 		comissao = ComissaoVenda().store.find(ComissaoVenda, ComissaoVenda.ci_usuario==self.ci,
 											  ComissaoVenda.competencia==self.competencia,
 											  ComissaoVenda.sequencia==sequencia_atual).order_by(ComissaoVenda.data_atd)

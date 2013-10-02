@@ -266,6 +266,7 @@
 									<th class="head">Situações Financeiro</th>
 									<th class="head">Total</th>
 									<th class="head">Analisar</th>
+									<th class="head">Valida</th>
 								</tr>
 								
 								<tal:rep repeat="item comissao/vendas_validas|python:[]">
@@ -281,6 +282,16 @@
 										<td>
 											<a href="" tal:attributes="href string: ${context/absolute_url}/gerenciar-comissoes?cpf_cliente=${item/cpf}&vendedor=${prefs_user/name}">Enviar</a>
 										</td>
+										<td>
+											<img src="" alt="Comissão Validada" title="Comissão Validada"
+												 tal:condition="item/aprovado|python:False"
+												 tal:attributes="src string:${view/static_url}/img/ok.gif"
+												 />
+											<img src="" alt="Comissão não Validada" title="Comissão não Validada"
+												 tal:condition="not: item/aprovado|python:True"
+												 tal:attributes="src string:${view/static_url}/img/false.png"
+												 />	 
+										</td>
 									</tr>	
 								</tal:rep>
 							</table>
@@ -294,15 +305,16 @@
 
 							<table class="listing">
 								<tr>
-									<td>Equipe Valida</td>
-									<td>Consultor</td>
-									<td>CPF</td>
-									<td>Nome Cliente</td>
-									<td>Data Atendimento</td>
-									<td>Situações</td>
-									<td>Situações Financeiro</td>
-									<td>Total</td>
+									<th class="head">Equipe Valida</th>
+									<th class="head">Consultor</th>
+									<th class="head">CPF</th>
+									<th class="head">Nome Cliente</th>
+									<th class="head">Data Atendimento</th>
+									<th class="head">Situações</th>
+									<th class="head">Situações Financeiro</th>
+									<th class="head">Total</th>
 									<th class="head">Analisar</th>
+									<th class="head">Valida</th>
 								</tr>
 								
 								<tal:rep repeat="item comissao/vendas_invalidas|python:[]">
@@ -317,6 +329,17 @@
 										<td tal:content="item/pontos|string: ">pontos</td>
 										<td>
 											<a href="" tal:attributes="href string: ${context/absolute_url}/gerenciar-comissoes?cpf_cliente=${item/cpf}&vendedor=${prefs_user/name}">Enviar</a>
+										</td>
+										<td>
+											<img src="" alt="Comissão Validada" title="Comissão Validada"
+												 tal:condition="item/aprovado|python:False"
+												 tal:attributes="src string:${view/static_url}/img/ok.gif"
+												 />
+
+											<img src="" alt="Comissão não Validada" title="Comissão não Validada"
+												 tal:condition="not: item/aprovado|python:True"
+												 tal:attributes="src string:${view/static_url}/img/false.png"
+												 />	 
 										</td>
 									</tr>	
 								</tal:rep>

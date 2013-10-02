@@ -22,6 +22,7 @@ class ComissaoVenda(Storm, ComissaoBase):
 	situacao_financeiro = Unicode()
 	status = Bool()
 	pontos = Int()
+	aprovado = Bool()
 	# comissao_usuario_id = Int()
 	date_created = DateTime()
 	date_modified = DateTime()

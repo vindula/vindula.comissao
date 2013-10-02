@@ -64,3 +64,13 @@ def convert_str2date(str):
 			return date.today()
 	
 	return date.today()
+
+def convert_str2bool(str):
+	if str:
+		if str== '1':
+			return True
+	return False
+
+
+
+

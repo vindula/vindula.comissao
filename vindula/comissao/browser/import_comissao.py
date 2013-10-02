@@ -7,7 +7,7 @@ from zope.component import getUtility
 from plone.registry.interfaces import IRegistry
 
 from vindula.comissao.tools import convert_csv2list_dict, convert_str2int,\
-								   convert_str2decimal, convert_str2unicode, convert_str2date
+								   convert_str2decimal, convert_str2unicode, convert_str2date, convert_str2bool
 
 from vindula.comissao import MessageFactory as _
 from vindula.comissao.models.comissao_usuario import ComissaoUsuario
@@ -154,7 +154,8 @@ class ImportComissaoView(grok.View):
 				 'situacao': convert_str2unicode(dados.get('Situacoes')),
 				 'situacao_financeiro': convert_str2unicode(dados.get('Situacao Financeiro','')),
 				 'pontos': convert_str2int(dados.get('Pontos Comissoes','')),
-				 'sequencia': sequencia
+				 'sequencia': sequencia,
+				 'aprovado' : convert_str2bool(dados.get('Aprovado',''))
 				}
 
 			if dados.get('Status Vendas') == 'Vendas Validas':
