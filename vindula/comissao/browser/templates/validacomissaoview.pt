@@ -32,10 +32,10 @@
 							<input type="hidden" value="" name="competencia"
 								   tal:attributes="value comissao/competencia|nothing">
 
-							<input type="hidden" value="" name="sequencia_venda"
+							<input type="hidden" value="" name="sequencia_usuario"
 								   tal:attributes="value comissao/sequencia|string:0">								   
 							
-							<input type="hidden" value="" name="sequencia_usuario"
+							<input type="hidden" value="" name="sequencia_venda"
 								   tal:attributes="value python: comissao.vendas[0].sequencia">
 
 					    	<input type="hidden" value="True" name="submitted">
