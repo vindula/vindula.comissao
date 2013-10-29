@@ -67,6 +67,28 @@ class ImportComissaoView(grok.View):
 
 			IStatusMessage(self.request).addStatusMessage(_(u'As regras gerais foram salvas com sucesso.'),"info")
 
+
+		elif 'regras_validacao' in form.keys():
+			regras_validacao = form.get('text_regras_validacao','')
+
+			settings_comissao = self.get_register_regras_validacao()
+			settings_comissao.value = unicode(regras_validacao, 'utf-8')
+
+			transaction.commit()
+
+			IStatusMessage(self.request).addStatusMessage(_(u'As regras de validação gerais foram salvas com sucesso.'),"info")
+
+
+		elif 'titulo_comissao' in form.keys():
+			titulo_comissao = form.get('text_titulo_comissao','')
+
+			settings_comissao = self.get_register_titulo()
+			settings_comissao.value = unicode(titulo_comissao, 'utf-8')
+
+			transaction.commit()
+
+			IStatusMessage(self.request).addStatusMessage(_(u'O Titulo do extrato foi salvo com sucesso.'),"info")
+
 		
 	def list_import_venda(self):
 		return ComissaoVenda().get_bloco_importacao_venda()
@@ -85,6 +107,33 @@ class ImportComissaoView(grok.View):
 
 		return settings_comissao
 
+	def get_register_regras_validacao(self):
+		registry = getUtility(IRegistry)
+		try:
+			settings_comissao = registry.records['vindula.comissao.register.interfaces.IVindulaComissao.validacao_comissoes']
+		except:
+			settings_comissao = False		
+
+		return settings_comissao
+
+	def get_register_titulo(self):
+		registry = getUtility(IRegistry)
+		try:
+			settings_comissao = registry.records['vindula.comissao.register.interfaces.IVindulaComissao.titulo_comissoes']
+		except:
+			settings_comissao = False		
+
+		return settings_comissao
+
+	def get_titulo_comissao(self):
+		settings_comissao = self.get_register_titulo()
+
+		if settings_comissao:
+			return settings_comissao.value
+		else:
+			return ""
+
+
 	def get_regras_gerais(self):
 		settings_comissao = self.get_register_regras_gerais()
 
@@ -92,6 +141,15 @@ class ImportComissaoView(grok.View):
 			return settings_comissao.value
 		else:
 			return ""
+
+	def get_regras_validacao(self):
+		settings_comissao = self.get_register_regras_validacao()
+
+		if settings_comissao:
+			return settings_comissao.value
+		else:
+			return ""
+
 
 
 	def import_usuarios(self,rows):

@@ -5,6 +5,7 @@
 from storm.locals import *
 from vindula.comissao.models import ComissaoBase
 from vindula.comissao.models.comissao_venda import ComissaoVenda
+from vindula.comissao.models.comissao_validacao import ComissaoValidacao
 
  
 class ComissaoUsuario(Storm,ComissaoBase):
@@ -97,6 +98,11 @@ class ComissaoUsuario(Storm,ComissaoBase):
 		data = self.store.find(ComissaoUsuario,
 							   ComissaoUsuario.cpf==cpf_user).order_by(ComissaoUsuario.competencia)
 		return data
+
+
+	def isValid(self):
+		return ComissaoValidacao().get_comissao_isValid(self.cpf,self.competencia,self.sequencia,'usuario')
+
 
 	def get_bloco_importacao_comissao(self):
 		select = Select(ComissaoUsuario.sequencia,

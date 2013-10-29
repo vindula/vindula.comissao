@@ -1,0 +1,58 @@
+<html  metal:use-macro="here/main_template/macros/master">
+	<head>
+		
+	</head>
+	<body>
+		<div metal:fill-slot="main">
+
+			<h2>Validar Sua Comissões</h2>
+
+			<div class="text" tal:define="dados_user view/get_dados_user|python:{};
+										  name_user	dados_user/name|string: ;
+										  cpf_user dados_user/cpf|string: ;
+										  data_validacao view/data_atual|string: ;
+										  comissao python:view.get_comissao(cpf_user);">
+				
+				<h3 tal:content="string: Eu, ${name_user}, CPF: ${cpf_user}"></h3>
+				<tal:cont content="structure view/get_termo_valida|string: ">
+					EU, _________________ , CPF: _____________, FUNCIONÁRIO DA EMPRESA R1 TELEMARKETING, AFIRMO QUE CONFERI E 
+					VALIDEI TODAS AS INFORMAÇÕES DESCRITAS NESTE DOCUMENTO NA DATA DE ______________ ÁS __ : __ NÃO TENDO MAIS NADA A RECLAMAR
+					SOBRE OS VALORES PAGOS A TÍTULO DE COMISSÃO E GRATIFICAÇÃO DAS VENDAS IMPLANTADAS REALIZADAS NO PERÍODO DE __/__/__ a __/__/__.
+ 				</tal:cont>
+
+				<h3 tal:content="python:'Período de vendas validadas: de 01/%s a %s/%s'
+								 %(comissao.competencia, view.get_fimMes(comissao.competencia),comissao.competencia)"></h3>
+ 				<h3 tal:content="string: Data da validação: ${data_validacao}"></h3>
+
+				<form action="/valida-comissao" method="post" name="comisao-form" tal:condition="not: request/submitted|nothing">
+					
+					<!-- Botões de ação --> 
+					<fieldset>
+					    <div>
+							<input type="hidden" value="" name="competencia"
+								   tal:attributes="value comissao/competencia|nothing">
+
+							<input type="hidden" value="" name="sequencia_venda"
+								   tal:attributes="value comissao/sequencia|string:0">								   
+							
+							<input type="hidden" value="" name="sequencia_usuario"
+								   tal:attributes="value python: comissao.vendas[0].sequencia">
+
+					    	<input type="hidden" value="True" name="submitted">
+						    
+						    <input class="context bt_comments" type="button" value="Cancelar" name="form.cancel"
+						    	   tal:condition="not: ajax_load" onclick="location.href='/minha-comissao'">
+
+							<input class="context bt_comments" type="button" value="Cancelar" name="form.cancel" tal:condition="ajax_load" >
+					        
+					        <input class="context bt_comments" type="submit" value="Validar" name="form.submited">    
+					    </div>
+					</fieldset>		
+
+				</form>
+
+			</div>
+
+		</div>
+	</body>
+</html>

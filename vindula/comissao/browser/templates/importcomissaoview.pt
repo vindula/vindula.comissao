@@ -112,31 +112,45 @@
 
 					</div>
 					<br />
+
+					<div id="titulo_comissao">
+
+						<h4>Informa o titulo do extrato de comissões</h4>
+						<form method="post" >
+						 
+	                        <input type="text" name="text_titulo_comissao" id="titulo_comissao" size="45"
+	                        		tal:attributes="value view/get_titulo_comissao|string: "/>
+							<input type="submit" name="titulo_comissao" value="Salvar Titulo">
+						</form>	
+
+					</div>
+					<br />
+
 					<div id="regras_gerais">
 
-						<h4>Informa quais são as regras gerais do relatorio de comições</h4>
+						<h4>Informa quais são as regras gerais do relatorio de comissões</h4>
 						<form method="post" >
-								<script type="text/javascript">
-									 $j(document).ready(function(){
+							<script type="text/javascript">
+								 $j(document).ready(function(){
 
-										ckid = $j('#area_regras_gerais').attr('id');
-								        cke_config_url = jQuery('.cke_config_url', $j('#area_regras_gerais').parent()).val();
-								        if (!CKEDITOR.instances)
-								            CKInstances($j('#area_regras_gerais'));
-								        else if (!CKEDITOR.instances[ckid]){
-								            CKInstances($j('#area_regras_gerais'));
-								        }
-									 });
+									ckid = $j('#area_regras_gerais').attr('id');
+							        cke_config_url = jQuery('.cke_config_url', $j('#area_regras_gerais').parent()).val();
+							        if (!CKEDITOR.instances)
+							            CKInstances($j('#area_regras_gerais'));
+							        else if (!CKEDITOR.instances[ckid]){
+							            CKInstances($j('#area_regras_gerais'));
+							        }
+								 });
 
-								</script>
-							 
-								<input class="cke_config_url" type="hidden" name="cke_config_url" tal:attributes="value string:${context/portal_url}/ckeditor_plone_config.js">
-		                        <input class="cke_iswidget" type="hidden" value="True" name="cke_iswidget">
-		                        
-		                        <div class="widget_settings">
-		                            <input class="cke_baseHref" type="hidden" name="cke_baseHref" tal:attributes="value string:${context/portal_url}" >
-		                            <input class="cke_height" type="hidden" value="310px" name="cke_height">
-		                        </div>
+							</script>
+						 
+							<input class="cke_config_url" type="hidden" name="cke_config_url" tal:attributes="value string:${context/portal_url}/ckeditor_plone_config.js">
+	                        <input class="cke_iswidget" type="hidden" value="True" name="cke_iswidget">
+	                        
+	                        <div class="widget_settings">
+	                            <input class="cke_baseHref" type="hidden" name="cke_baseHref" tal:attributes="value string:${context/portal_url}" >
+	                            <input class="cke_height" type="hidden" value="310px" name="cke_height">
+	                        </div>
 	                 		
 	                        <textarea style="width: 100%; height: 250px;" name="text_regras_gerais" id='area_regras_gerais'
 	                        		  class="ckeditor_plone_custom" tal:content="view/get_regras_gerais|string: ">
@@ -146,6 +160,44 @@
 						</form>	
 
 					</div>
+					<br />
+
+					<div id="regras_validacao">
+		
+						<h4>Informa quais são as regras de validão do relatorio de comissões para o usuário</h4>
+						<form method="post" >
+							<script type="text/javascript">
+								 $j(document).ready(function(){
+
+									ckid = $j('#area_regras_validacao').attr('id');
+							        cke_config_url = jQuery('.cke_config_url', $j('#area_regras_validacao').parent()).val();
+							        if (!CKEDITOR.instances)
+							            CKInstances($j('#area_regras_validacao'));
+							        else if (!CKEDITOR.instances[ckid]){
+							            CKInstances($j('#area_regras_validacao'));
+							        }
+								 });
+
+							</script>
+						 
+							<input class="cke_config_url" type="hidden" name="cke_config_url" tal:attributes="value string:${context/portal_url}/ckeditor_plone_config.js">
+	                        <input class="cke_iswidget" type="hidden" value="True" name="cke_iswidget">
+	                        
+	                        <div class="widget_settings">
+	                            <input class="cke_baseHref" type="hidden" name="cke_baseHref" tal:attributes="value string:${context/portal_url}" >
+	                            <input class="cke_height" type="hidden" value="310px" name="cke_height">
+	                        </div>
+	                 		
+	                        <textarea style="width: 100%; height: 250px;" name="text_regras_validacao" id='area_regras_validacao'
+	                        		  class="ckeditor_plone_custom" tal:content="view/get_regras_validacao|string: ">
+	                        	
+	                        </textarea>
+							<input type="submit" name="regras_validacao" value="Salvar Regras Validação">
+						</form>	
+
+					</div>
+
+
 	
 				</div>
 

@@ -38,7 +38,6 @@ class MyComissaoView(grok.View, UtilMyvindula):
         try:cpf = unicode(cpf, 'utf-8')
         except:pass
 
-        # import pdb;pdb.set_trace()
         comissoes = ComissaoUsuario().get_comissao_by_cpf(cpf)
 
         self.comissoes = comissoes
@@ -100,6 +99,19 @@ class MyComissaoView(grok.View, UtilMyvindula):
             return settings_comissao.value
         else:
             return ""
+
+    def get_titulo_extrato(self):
+        registry = getUtility(IRegistry)
+        try:
+            settings_comissao = registry.records['vindula.comissao.register.interfaces.IVindulaComissao.titulo_comissoes']
+        except:
+            settings_comissao = False       
+
+        if settings_comissao:
+            return settings_comissao.value
+        else:
+            return ''
+
 
     def format_data(self,data):
         if data:
