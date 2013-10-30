@@ -158,9 +158,9 @@
 										<td class="grayblack" >Valor Inicial</td>
 									</tr>
 									<tr>
-										<td tal:content="comissao/pv_bonus|string: ">0</td>
-										<td tal:content="comissao/pv_mensal|string: ">5790</td>
-										<td tal:content="comissao/pv_total|string: ">5790</td>
+										<td tal:content="python:view.format_number(comissao.pv_bonus)">0</td>
+										<td tal:content="python:view.format_number(comissao.pv_mensal)">5790</td>
+										<td tal:content="python:view.format_number(comissao.pv_total)">5790</td>
 										<td tal:content="comissao/pv_meta|string: ">ouro</td>
 										<td tal:content="python: view.format_moeda(comissao.valor_inicial)">289,50</td>
 									</tr>

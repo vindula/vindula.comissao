@@ -12,6 +12,7 @@ from vindula.comissao import MessageFactory as _
 from vindula.comissao.models.comissao_usuario import ComissaoUsuario
 
 from datetime import date, datetime, timedelta
+import locale
 
 grok.templatedir('templates')
 
@@ -141,6 +142,11 @@ class MyComissaoView(grok.View, UtilMyvindula):
             mais informações
             http://teago.futuria.com.br/howto/python-26-configurando-locales-pt-br-utf-8/
         '''
-        import locale
         locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
         return locale.currency( float(val), grouping=True)
+
+
+    def format_number(self, val):
+        locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
+        return locale.format('%d', val, grouping=True)
+        
