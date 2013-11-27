@@ -65,353 +65,359 @@
                     </form>
                 </tal:cond>
 
-				<div id="my_comissoes"
-					 tal:condition="validUser"
-					 tal:define="comissao view/comissao|nothing;
-					 			 comissoes view/comissoes|python:[];
-					 			 req_competencia request/id|nothing;
-					 			 prefs_user view/prefs_user|nothing;
+				<metal:macro define-macro="comissao">
 
-					 			 comisao_isValid comissao/isValid|python:False;" >
+					<div id="my_comissoes"
+						 tal:condition="validUser"
+						 tal:define="comissao view/comissao|nothing;
+						 			 comissoes view/comissoes|python:[];
+						 			 req_competencia request/id|nothing;
+						 			 prefs_user view/prefs_user|nothing;
 
-					<tal:cond condition="comissao|nothing" >
-		
-<!-- 						<div> 
-							<script type="text/javascript">
+						 			 comisao_isValid comissao/isValid|python:False;" >
 
-								$(document).ready(function () {
+						<tal:cond condition="comissao|nothing" >
+			
+	<!-- 						<div> 
+								<script type="text/javascript">
 
-									$('#select-comissao').change(function(){
-										var portal_url = $j('base').attr('href'),
-											competencia = this.value;
+									$(document).ready(function () {
 
-											window.location.href = portal_url+'/minha-comissao?id='+competencia;
+										$('#select-comissao').change(function(){
+											var portal_url = $j('base').attr('href'),
+												competencia = this.value;
+
+												window.location.href = portal_url+'/minha-comissao?id='+competencia;
+										});
+
 									});
 
-								});
 
-
-							</script>
-							
-							<select id="select-comissao" name="select-comissao">
-	                            <option value="">Competência</option>
-	                            <tal:rep repeat="opt comissoes">
-	                                <option tal:define="value_sel opt/id|nothing;
-	                                					comp opt/competencia|nothing"
-	                                		tal:attributes="value value_sel;
-	                                						selected python: value_sel==req_competencia and 'selected' or ''"
-	                                        tal:condition="comp"
-	                                        tal:content="comp" />
-	                            </tal:rep>
-	                        </select>
-						</div> -->
-
-						<div class="row boderbootom">
-							<div class="cell width-1:2 position-0">
-								<div id="logo" tal:define="portal python: context.portal_url.getPortalObject();
-	                        							   config_obj python: portal['control-panel-objects']['ThemeConfig'];">
-	                
-					                <img tal:condition="config_obj/getLogoCabecalho" height="60px" 
-					                     tal:attributes="src python: config_obj.getLogoCabecalho().absolute_url() or None" />
-					        
-					                <img tal:condition="not: config_obj/getLogoCabecalho" height="60px"
-					                     src="/++resource++vindula.controlpanel/imagens/logo_topo.png" />   
-					                
-					            </div> 
-								<h3 tal:content="view/get_titulo_extrato|string: ">Comissão de Vendas - Extrato Fechamento</h3>
-							</div>
-							<div class="cell width-1:2 position-1:2 textbottom" >
-								<h4>Consultor: <span tal:replace="prefs_user/name|string: " /></h4>
-								<h4>CPF: <span tal:replace="prefs_user/cpf|prefs_user/teaching_research|string: " /> </h4>
-							</div>
-						</div>
-						<div class="row marginbottom">
-							<div class="cell width-1:3 position-0">
-								<h3>Competencia: <span tal:replace="comissao/competencia|string: " /></h3>
-							</div>
-							<div class="cell width-1:3 position-1:3">
-								<h3 class="center">Equipe: <span tal:replace="comissao/equipe|string: " /></h3>
-							</div>
-							<div class="cell width-1:3 position-2:3">
-								<h3>Matrícula: <span tal:replace="prefs_user/matricula|prefs_user/registration|string:" /></h3>
-							</div>
-						</div>
-
-						<div class="row boderbootom">
-							<div class="cell width-6 position-0">
-
-								<table>
-									<tr >
-										<th class="blackwhite head"
-										 	colspan="5">Painel Resultados - Pontos e Metas Atingidos</th>	
-									</tr>
-									<tr>
-										<td class="bluewhite"
-											colspan="4">Pontos Vendas</td>
-										<td class="grayblack">Comissão</td>
-									</tr>
-									<tr>
-										<td class="lightbluebalck">Bonus</td>
-										<td class="lightbluebalck">Mensal</td>
-										<td class="blue2balck">Total</td>
-										<td class="blackwhite" >Meta</td>
-										<td class="grayblack" >Valor Inicial</td>
-									</tr>
-									<tr>
-										<td tal:content="python:view.format_number(comissao.pv_bonus)">0</td>
-										<td tal:content="python:view.format_number(comissao.pv_mensal)">5790</td>
-										<td tal:content="python:view.format_number(comissao.pv_total)">5790</td>
-										<td tal:content="comissao/pv_meta|string: ">ouro</td>
-										<td tal:content="python: view.format_moeda(comissao.valor_inicial)">289,50</td>
-									</tr>
-
-								</table>
-							</div>
-							<div class="cell width-6 position-6">
+								</script>
 								
-								<table>
-									<tr>
-										<th class="blackwhite head" colspan="5">Painel Comissões - Meta Adicionais</th>
-									</tr>
-									<tr>
-										<td class="bluewhite">Adicional 1</td>
-										<td class="graywhite">Faltas</td>
-										<td class="graywhite">Atrasos</td>
-										<td class="blackwhite" >Direito</td>
-										<td class='grayblack'>Valor</td>
-									</tr>
-									<tr>
-										<td>ABS</td>
-										<td tal:content="comissao/faltas|string: ">0</td>
-										<td tal:content="comissao/atrasos|string: ">0</td>
-										<td></td>
-										<td tal:content="python:view.format_moeda(comissao.adicional1)">200</td>
-									</tr>
-									<tr>
-										<td class="bluewhite">Adicional 2</td>
-										<td class="graywhite" colspan="2" >HS</td>
-										<td class="blackwhite" >Direto</td>
-										<td class='grayblack'>Valor</td>
-									</tr>
-									<tr>
-										<td>Anti-Fraude</td>
-										<td colspan="2" tal:content="comissao/head_shot|string: ">0</td>
-										<td></td>
-										<td tal:content="python:view.format_moeda(comissao.adicional2)">200</td>
-									</tr>
-									<tr>
-										<td class="bluewhite">Adicional 3</td>
-										<td class="graywhite" colspan="2"> % Desist. BV</td>
-										<td class="blackwhite" >Direito</td>
-										<td class='grayblack'>Valor</td>
-									</tr>
-									<tr>
-										<td>Desistente BV</td>
-										<td colspan="2" tal:content="comissao/bv_porcentagem|string: ">18%</td>
-										<td></td>
-										<td tal:content="python:view.format_moeda(comissao.adicional3)">450</td>
-									</tr>
-									<tr>
-										<td class="bluewhite">Adicional 4</td>
-										<td class="graywhite" >Prop.</td>
-										<td class="graywhite">Média/Dia</td>
-										<td class="blackwhite" >Direito</td>
-										<td class='grayblack'>Valor</td>
-									</tr>	
-									<tr>
-										<td>Meta Proposta</td>
-										<td tal:content="comissao/q_proposta|string: ">159</td>
-										<td tal:content="comissao/media_dia|string: ">7</td>
-										<td></td>
-										<td tal:content="python:view.format_moeda(comissao.adicional4)">200</td>
-									</tr>
-									<tr>
-										<td class="bluewhite">Adicional 5</td>
-										<td class="graywhite" colspan="2"> </td>
-										<td class="blackwhite" >Direito</td>
-										<td class='grayblack' >Valor</td>
-									</tr>
-									<tr>
-										<td>Ticket Médio</td>
-										<td colspan="2" tal:content="comissao/ticket|string: "></td>
-										<td></td>
-										<td tal:content="python:view.format_moeda(comissao.adicional5)">800</td>
-									</tr>
-								</table>
-							
+								<select id="select-comissao" name="select-comissao">
+		                            <option value="">Competência</option>
+		                            <tal:rep repeat="opt comissoes">
+		                                <option tal:define="value_sel opt/id|nothing;
+		                                					comp opt/competencia|nothing"
+		                                		tal:attributes="value value_sel;
+		                                						selected python: value_sel==req_competencia and 'selected' or ''"
+		                                        tal:condition="comp"
+		                                        tal:content="comp" />
+		                            </tal:rep>
+		                        </select>
+							</div> -->
+
+							<div class="row boderbootom">
+								<div class="cell width-1:2 position-0">
+									<div id="logo" tal:define="portal python: context.portal_url.getPortalObject();
+		                        							   config_obj python: portal['control-panel-objects']['ThemeConfig'];">
+		                
+						                <img tal:condition="config_obj/getLogoCabecalho" height="60px" 
+						                     tal:attributes="src python: config_obj.getLogoCabecalho().absolute_url() or None" />
+						        
+						                <img tal:condition="not: config_obj/getLogoCabecalho" height="60px"
+						                     src="/++resource++vindula.controlpanel/imagens/logo_topo.png" />   
+						                
+						            </div> 
+									<h3 tal:content="view/get_titulo_extrato|string: ">Comissão de Vendas - Extrato Fechamento</h3>
+								</div>
+								<div class="cell width-1:2 position-1:2 textbottom" >
+									<h4>Consultor: <span tal:replace="prefs_user/name|string: " /></h4>
+									<h4>CPF: <span tal:replace="prefs_user/cpf|prefs_user/teaching_research|string: " /> </h4>
+								</div>
 							</div>
-							<div class="cell width-4 position-12">
-
-								<table>
-									<tr>
-										<td class="grayblack" colspan="2">Meta Equipe</td>
-									</tr>
-									<tr>
-										<td class="blackwhite" >Meta</td>
-										<td class="blackwhite" >%</td>
-									</tr>
-									<tr>
-										<td tal:content="comissao/me_meta|string: ">Não</td>
-										<td tal:define="valor comissao/me_porcentagem|string:0"
-											tal:content="string:${valor}%">0%</td>
-									</tr>
-								</table>
-							
-								<br/> <br/>
-
-								<table>
-									<tr>
-										<td class="grayblack" colspan="3">Comissão</td>
-									</tr>
-									<tr>
-										<td class="blackwhite" >Valor Inicial</td>
-										<td class="blackwhite" >Total Adicionais</td>
-										<td class="blackwhite" >Total á Receber</td>
-									</tr>
-									<tr>
-										<td tal:content="python:view.format_moeda(comissao.valor_inicial)">250</td>
-										<td>2316</td>
-										<td tal:content="python: view.format_moeda(comissao.valor_final)">2605</td>
-									</tr>
-								</table>
-
+							<div class="row marginbottom">
+								<div class="cell width-1:3 position-0">
+									<h3>Competencia: <span tal:replace="comissao/competencia|string: " /></h3>
+								</div>
+								<div class="cell width-1:3 position-1:3">
+									<h3 class="center">Equipe: <span tal:replace="comissao/equipe|string: " /></h3>
+								</div>
+								<div class="cell width-1:3 position-2:3">
+									<h3>Matrícula: <span tal:replace="prefs_user/matricula|prefs_user/registration|string:" /></h3>
+								</div>
 							</div>
-						</div>
-					
-						<div class="row">
-							<h3>VENDAS VALIDAS COMISSÃO</h3>
-							<p>** São as vendas da competencia implantadas que serão considerados as pontuações para efeito de comissionamento.</p>
 
-							<table class="listing">
-								<tr>
-									<th class="head" >Equipe Valida</th>
-									<th class="head">Consultor</th>
-									<th class="head">CPF</th>
-									<th class="head">Nome Cliente</th>
-									<th class="head">Data Atendimento</th>
-									<th class="head">Situações</th>
-									<th class="head">Situações Financeiro</th>
-									<th class="head">Total</th>
-									<tal:cond condition="not: comisao_isValid">
-										<th class="head">Analisar</th>
-										<th class="head">Valida</th>
-									</tal:cond>
-								</tr>
+							<div class="row boderbootom">
+								<div class="cell width-6 position-0">
+
+									<table>
+										<tr >
+											<th class="blackwhite head"
+											 	colspan="5">Painel Resultados - Pontos e Metas Atingidos</th>	
+										</tr>
+										<tr>
+											<td class="bluewhite"
+												colspan="4">Pontos Vendas</td>
+											<td class="grayblack">Comissão</td>
+										</tr>
+										<tr>
+											<td class="lightbluebalck">Bonus</td>
+											<td class="lightbluebalck">Mensal</td>
+											<td class="blue2balck">Total</td>
+											<td class="blackwhite" >Meta</td>
+											<td class="grayblack" >Valor Inicial</td>
+										</tr>
+										<tr>
+											<td tal:content="python:view.format_number(comissao.pv_bonus)">0</td>
+											<td tal:content="python:view.format_number(comissao.pv_mensal)">5790</td>
+											<td tal:content="python:view.format_number(comissao.pv_total)">5790</td>
+											<td tal:content="comissao/pv_meta|string: ">ouro</td>
+											<td tal:content="python: view.format_moeda(comissao.valor_inicial)">289,50</td>
+										</tr>
+
+									</table>
+								</div>
+								<div class="cell width-6 position-6">
+									
+									<table>
+										<tr>
+											<th class="blackwhite head" colspan="5">Painel Comissões - Meta Adicionais</th>
+										</tr>
+										<tr>
+											<td class="bluewhite">Adicional 1</td>
+											<td class="graywhite">Faltas</td>
+											<td class="graywhite">Atrasos</td>
+											<td class="blackwhite" >Direito</td>
+											<td class='grayblack'>Valor</td>
+										</tr>
+										<tr>
+											<td>ABS</td>
+											<td tal:content="comissao/faltas|string: ">0</td>
+											<td tal:content="comissao/atrasos|string: ">0</td>
+											<td></td>
+											<td tal:content="python:view.format_moeda(comissao.adicional1)">200</td>
+										</tr>
+										<tr>
+											<td class="bluewhite">Adicional 2</td>
+											<td class="graywhite" colspan="2" >HS</td>
+											<td class="blackwhite" >Direto</td>
+											<td class='grayblack'>Valor</td>
+										</tr>
+										<tr>
+											<td>Anti-Fraude</td>
+											<td colspan="2" tal:content="comissao/head_shot|string: ">0</td>
+											<td></td>
+											<td tal:content="python:view.format_moeda(comissao.adicional2)">200</td>
+										</tr>
+										<tr>
+											<td class="bluewhite">Adicional 3</td>
+											<td class="graywhite" colspan="2"> % Desist. BV</td>
+											<td class="blackwhite" >Direito</td>
+											<td class='grayblack'>Valor</td>
+										</tr>
+										<tr>
+											<td>Desistente BV</td>
+											<td colspan="2" tal:content="comissao/bv_porcentagem|string: ">18%</td>
+											<td></td>
+											<td tal:content="python:view.format_moeda(comissao.adicional3)">450</td>
+										</tr>
+										<tr>
+											<td class="bluewhite">Adicional 4</td>
+											<td class="graywhite" >Prop.</td>
+											<td class="graywhite">Média/Dia</td>
+											<td class="blackwhite" >Direito</td>
+											<td class='grayblack'>Valor</td>
+										</tr>	
+										<tr>
+											<td>Meta Proposta</td>
+											<td tal:content="comissao/q_proposta|string: ">159</td>
+											<td tal:content="comissao/media_dia|string: ">7</td>
+											<td></td>
+											<td tal:content="python:view.format_moeda(comissao.adicional4)">200</td>
+										</tr>
+										<tr>
+											<td class="bluewhite">Adicional 5</td>
+											<td class="graywhite" colspan="2"> </td>
+											<td class="blackwhite" >Direito</td>
+											<td class='grayblack' >Valor</td>
+										</tr>
+										<tr>
+											<td>Ticket Médio</td>
+											<td colspan="2" tal:content="comissao/ticket|string: "></td>
+											<td></td>
+											<td tal:content="python:view.format_moeda(comissao.adicional5)">800</td>
+										</tr>
+									</table>
 								
-								<tal:rep repeat="item comissao/vendas_validas|python:[]">
+								</div>
+								<div class="cell width-4 position-12">
+
+									<table>
+										<tr>
+											<td class="grayblack" colspan="2">Meta Equipe</td>
+										</tr>
+										<tr>
+											<td class="blackwhite" >Meta</td>
+											<td class="blackwhite" >%</td>
+										</tr>
+										<tr>
+											<td tal:content="comissao/me_meta|string: ">Não</td>
+											<td tal:define="valor comissao/me_porcentagem|string:0"
+												tal:content="string:${valor}%">0%</td>
+										</tr>
+									</table>
+								
+									<br/> <br/>
+
+									<table>
+										<tr>
+											<td class="grayblack" colspan="3">Comissão</td>
+										</tr>
+										<tr>
+											<td class="blackwhite" >Valor Inicial</td>
+											<td class="blackwhite" >Total Adicionais</td>
+											<td class="blackwhite" >Total á Receber</td>
+										</tr>
+										<tr>
+											<td tal:content="python:view.format_moeda(comissao.valor_inicial)">250</td>
+											<td>2316</td>
+											<td tal:content="python: view.format_moeda(comissao.valor_final)">2605</td>
+										</tr>
+									</table>
+
+								</div>
+							</div>
+						
+							<div class="row">
+								<h3>VENDAS VALIDAS COMISSÃO</h3>
+								<p>** São as vendas da competencia implantadas que serão considerados as pontuações para efeito de comissionamento.</p>
+
+								<table class="listing">
 									<tr>
-										<td tal:content="comissao/equipe|string: ">equipe</td>
-										<td tal:content="prefs_user/name|string: "></td>
-										<td tal:content="python: view.format_cpf(item.cpf)">cpf</td>
-										<td tal:content="item/nome_cliente|string: ">nome</td>
-										<td tal:content="python: view.format_data(item.data_atd)">data</td>
-										<td tal:content="item/situacao|string: ">situaçao</td>
-										<td tal:content="item/situacao_financeiro|string: ">situação fina</td>
-										<td tal:content="item/pontos|string: ">pontos</td>
-										
+										<th class="head" >Equipe Valida</th>
+										<th class="head">Consultor</th>
+										<th class="head">CPF</th>
+										<th class="head">Nome Cliente</th>
+										<th class="head">Data Atendimento</th>
+										<th class="head">Situações</th>
+										<th class="head">Situações Financeiro</th>
+										<th class="head">Total</th>
 										<tal:cond condition="not: comisao_isValid">
-											<td>
-												<a href="" tal:attributes="href string: ${context/absolute_url}/gerenciar-comissoes?cpf_cliente=${item/cpf}&vendedor=${prefs_user/name}">Enviar</a>
-											</td>
+											<th class="head">Analisar</th>
+											<th class="head">Valida</th>
+										</tal:cond>
+									</tr>
+									
+									<tal:rep repeat="item comissao/vendas_validas|python:[]">
+										<tr>
+											<td tal:content="comissao/equipe|string: ">equipe</td>
+											<td tal:content="prefs_user/name|string: "></td>
+											<td tal:content="python: view.format_cpf(item.cpf)">cpf</td>
+											<td tal:content="item/nome_cliente|string: ">nome</td>
+											<td tal:content="python: view.format_data(item.data_atd)">data</td>
+											<td tal:content="item/situacao|string: ">situaçao</td>
+											<td tal:content="item/situacao_financeiro|string: ">situação fina</td>
+											<td tal:content="item/pontos|string: ">pontos</td>
 											
-											<td>
-												<img src="" alt="Comissão Validada" title="Comissão Validada"
-													 tal:condition="item/aprovado|python:False"
-													 tal:attributes="src string:${view/static_url}/img/ok.gif"
-													 />
-												<img src="" alt="Comissão não Validada" title="Comissão não Validada"
-													 tal:condition="not: item/aprovado|python:True"
-													 tal:attributes="src string:${view/static_url}/img/false.png"
-													 />	 
-											</td>
-										</tal:cond>
+											<tal:cond condition="not: comisao_isValid">
+												<td>
+													<a href="" tal:attributes="href string: ${context/absolute_url}/gerenciar-comissoes?cpf_cliente=${item/cpf}&vendedor=${prefs_user/name}">Enviar</a>
+												</td>
+												
+												<td>
+													<img src="" alt="Comissão Validada" title="Comissão Validada"
+														 tal:condition="item/aprovado|python:False"
+														 tal:attributes="src string:${view/static_url}/img/ok.gif"
+														 />
+													<img src="" alt="Comissão não Validada" title="Comissão não Validada"
+														 tal:condition="not: item/aprovado|python:True"
+														 tal:attributes="src string:${view/static_url}/img/false.png"
+														 />	 
+												</td>
+											</tal:cond>
 
-									</tr>	
-								</tal:rep>
-							</table>
-							<h3 tal:condition="not: comisao_isValid">
-								Para Adicionar uma venda não contabilizada <a href="" tal:attributes="href string: ${context/absolute_url}/gerenciar-comissoes?vendedor=${prefs_user/name}">Clique aqui</a>
-							</h3>
-							<br/>
+										</tr>	
+									</tal:rep>
+								</table>
+								<h3 tal:condition="not: comisao_isValid">
+									Para Adicionar uma venda não contabilizada <a href="" tal:attributes="href string: ${context/absolute_url}/gerenciar-comissoes?vendedor=${prefs_user/name}">Clique aqui</a>
+								</h3>
+								<br/>
 
-						</div>
-						<div class="row">
-							<h3>VENDAS NÃO CONSIDERADAS</h3>
+							</div>
+							<div class="row">
+								<h3>VENDAS NÃO CONSIDERADAS</h3>
 
-							<table class="listing">
-								<tr>
-									<th class="head">Equipe Valida</th>
-									<th class="head">Consultor</th>
-									<th class="head">CPF</th>
-									<th class="head">Nome Cliente</th>
-									<th class="head">Data Atendimento</th>
-									<th class="head">Situações</th>
-									<th class="head">Situações Financeiro</th>
-									<th class="head">Total</th>
-									<tal:cond condition="not: comisao_isValid">
-										<th class="head">Analisar</th>
-										<th class="head">Valida</th>
-									</tal:cond>
-								</tr>
-								
-								<tal:rep repeat="item comissao/vendas_invalidas|python:[]">
+								<table class="listing">
 									<tr>
-										<td tal:content="comissao/equipe|string: ">equipe</td>
-										<td tal:content="prefs_user/name|string: "></td>
-										<td tal:content="python: view.format_cpf(item.cpf)">cpf</td>
-										<td tal:content="item/nome_cliente|string: ">nome</td>
-										<td tal:content="python: view.format_data(item.data_atd)">data</td>
-										<td tal:content="item/situacao|string: ">situaçao</td>
-										<td tal:content="item/situacao_financeiro|string: ">situação fina</td>
-										<td tal:content="item/pontos|string: ">pontos</td>
-										
+										<th class="head">Equipe Valida</th>
+										<th class="head">Consultor</th>
+										<th class="head">CPF</th>
+										<th class="head">Nome Cliente</th>
+										<th class="head">Data Atendimento</th>
+										<th class="head">Situações</th>
+										<th class="head">Situações Financeiro</th>
+										<th class="head">Total</th>
 										<tal:cond condition="not: comisao_isValid">
-											<td>
-												<a href="" tal:attributes="href string: ${context/absolute_url}/gerenciar-comissoes?cpf_cliente=${item/cpf}&vendedor=${prefs_user/name}">Enviar</a>
-											</td>
-											<td>
-												<img src="" alt="Comissão Validada" title="Comissão Validada"
-													 tal:condition="item/aprovado|python:False"
-													 tal:attributes="src string:${view/static_url}/img/ok.gif"
-													 />
-
-												<img src="" alt="Comissão não Validada" title="Comissão não Validada"
-													 tal:condition="not: item/aprovado|python:True"
-													 tal:attributes="src string:${view/static_url}/img/false.png"
-													 />	 
-											</td>
+											<th class="head">Analisar</th>
+											<th class="head">Valida</th>
 										</tal:cond>
-									</tr>	
-								</tal:rep>
-							</table>
-							<h3 tal:condition="not: comisao_isValid">
-								Para Adicionar uma venda não contabilizada <a href="" tal:attributes="href string: ${context/absolute_url}/gerenciar-comissoes?vendedor=${prefs_user/name}">Clique aqui</a>
-							</h3>
-							<br/>
+									</tr>
+									
+									<tal:rep repeat="item comissao/vendas_invalidas|python:[]">
+										<tr>
+											<td tal:content="comissao/equipe|string: ">equipe</td>
+											<td tal:content="prefs_user/name|string: "></td>
+											<td tal:content="python: view.format_cpf(item.cpf)">cpf</td>
+											<td tal:content="item/nome_cliente|string: ">nome</td>
+											<td tal:content="python: view.format_data(item.data_atd)">data</td>
+											<td tal:content="item/situacao|string: ">situaçao</td>
+											<td tal:content="item/situacao_financeiro|string: ">situação fina</td>
+											<td tal:content="item/pontos|string: ">pontos</td>
+											
+											<tal:cond condition="not: comisao_isValid">
+												<td>
+													<a href="" tal:attributes="href string: ${context/absolute_url}/gerenciar-comissoes?cpf_cliente=${item/cpf}&vendedor=${prefs_user/name}">Enviar</a>
+												</td>
+												<td>
+													<img src="" alt="Comissão Validada" title="Comissão Validada"
+														 tal:condition="item/aprovado|python:False"
+														 tal:attributes="src string:${view/static_url}/img/ok.gif"
+														 />
 
-						</div>
-						<div class="row">
-							<h3>Regras Meta Geral de acordo com Tabela: Competência: <span tal:replace="comissao/competencia|string: " /></h3>
-							<div tal:content="structure view/getRegrasGerais|string: ">
-								Regras gerais
+													<img src="" alt="Comissão não Validada" title="Comissão não Validada"
+														 tal:condition="not: item/aprovado|python:True"
+														 tal:attributes="src string:${view/static_url}/img/false.png"
+														 />	 
+												</td>
+											</tal:cond>
+										</tr>	
+									</tal:rep>
+								</table>
+								<h3 tal:condition="not: comisao_isValid">
+									Para Adicionar uma venda não contabilizada <a href="" tal:attributes="href string: ${context/absolute_url}/gerenciar-comissoes?vendedor=${prefs_user/name}">Clique aqui</a>
+								</h3>
+								<br/>
+
+							</div>
+							<div class="row">
+								<h3>Regras Meta Geral de acordo com Tabela: Competência: <span tal:replace="comissao/competencia|string: " /></h3>
+								<div tal:content="structure view/getRegrasGerais|string: ">
+									Regras gerais
+								</div>
+
 							</div>
 
-						</div>
+							<h2 tal:condition="not: comisao_isValid">
+								<a href="/valida-comissao" class="validacao" >Validar Extrato de comissão</a>
+							</h2>
 
-						<h2 tal:condition="not: comisao_isValid">
-							<a href="/valida-comissao" class="validacao" >Validar Extrato de comissão</a>
-						</h2>
+							<div class="visualClear"></div>
 
-						<div class="visualClear"></div>
+						</tal:cond>
+						<tal:cond condition="not: comissao|nothing" >
+							<div>
+								<h3>Voce não possui comissões </h3>
+							</div>
+						</tal:cond>
 
-					</tal:cond>
-					<tal:cond condition="not: comissao|nothing" >
-						<div>
-							<h3>Voce não possui comissões </h3>
-						</div>
-					</tal:cond>
+					</div>
+				</metal:macro>
 
-				</div>
+
+
 		    </div>
 			<div class="visualClear"></div>
 		</div>  

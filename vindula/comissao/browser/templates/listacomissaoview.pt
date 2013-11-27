@@ -1,0 +1,66 @@
+<html  metal:use-macro="here/prefs_main_template/macros/master">
+	<head>
+				
+	</head>
+	<body>
+        <div id='content' metal:fill-slot="prefs_configlet_content">
+    		<div metal:use-macro="context/global_statusmessage/macros/portal_message">
+			    Status message
+			</div>
+
+			<div class="lista-comissao">
+                <h1>Listagem das Comissões</h1>
+                <br />	
+
+
+
+                <tal:define define="values view/lista_usuarios|python:[];
+                                    Batch python:modules['Products.CMFPlone'].Batch;
+
+                                    b_size python:15;
+                                    b_start python:0;
+                                    b_start request/b_start | b_start;
+                                    
+                                    batch python:Batch(values, b_size, int(b_start))" >
+                            
+	                <table id="listing-table" class="listing" >
+
+						<tr>
+							<th>Consultor</th>
+							<th>CPF</th>
+							<th>Competencia</th>
+							<th>Vendas validas comissão</th>
+							<th>Vendas não consideradas</th>
+							<th>Status</th>
+						</tr>
+						<tal:rep repeat="item batch">
+							
+							<tal:def define="cpf_usuario item/cpf|nofing;">
+								
+								<tr>
+									<td > <a href="" tal:attributes="href string: ${context/portal_url}/visao-comissao?cpf_user=${cpf_usuario}"
+											 tal:content="item/name|string: ">Nome</a>
+									</td>
+									<td tal:content="cpf_usuario|string: " >CPF</td>
+									<td tal:content="item/competencia|string: ">competencia</td>
+									<td tal:content="item/cont_vendas_validas">100</td>
+									<td tal:content="item/cont_vendas_invalidas">100</td>
+
+									<td>
+										OK
+									</td>
+
+								</tr>							
+
+							</tal:def>
+
+						</tal:rep>
+					
+					</table>
+					<div metal:use-macro="here/batch_macros/macros/navigation" />
+
+				</tal:define>
+			</div>
+		</div>  
+	</body>
+</html>

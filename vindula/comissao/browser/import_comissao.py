@@ -161,6 +161,7 @@ class ImportComissaoView(grok.View):
 
 			D = {'ci':convert_str2unicode(dados.get('CI', '')),
 				 'cpf':convert_str2unicode(dados.get('CPF','')),
+				 'name':convert_str2unicode(dados.get('Nome','')),
 				 'pv_bonus': convert_str2int(dados.get('Bonus','0')),
 				 'pv_mensal': convert_str2int(dados.get('Mensal','')),
 				 'pv_total': convert_str2int(dados.get('Total','')),

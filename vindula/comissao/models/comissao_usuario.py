@@ -7,6 +7,7 @@ from vindula.comissao.models import ComissaoBase
 from vindula.comissao.models.comissao_venda import ComissaoVenda
 from vindula.comissao.models.comissao_validacao import ComissaoValidacao
 
+from datetime import date
  
 class ComissaoUsuario(Storm,ComissaoBase):
 	__storm_table__ = 'vin_comissao_usuario'
@@ -14,6 +15,7 @@ class ComissaoUsuario(Storm,ComissaoBase):
 	id = Int(primary=True)
 	ci = Unicode()
 	cpf = Unicode()
+	name = Unicode()
 	pv_bonus = Int()
 	pv_mensal = Int()
 	pv_total = Decimal()
@@ -61,6 +63,17 @@ class ComissaoUsuario(Storm,ComissaoBase):
 	def vendas_invalidas(self):
 		invalido = self.vendas.find(status=False)
 		return invalido
+
+
+	@property
+	def cont_vendas_validas(self):
+		return self.vendas_validas.count()
+
+
+	@property
+	def cont_vendas_invalidas(self):
+		return self.vendas_invalidas.count()
+
 
 	def next_sequencia(self):
 		numero_atual = self.store.find(ComissaoUsuario).max(ComissaoUsuario.sequencia) or 0
@@ -116,4 +129,20 @@ class ComissaoUsuario(Storm,ComissaoBase):
 				L.append(tmp)
 
 		return L
+
+	def get_comisoes_byCompetencia(self,competencia):
+		last_sequencia = self.next_sequencia() - 1
+
+		data = self.store.find(ComissaoUsuario,
+							   ComissaoUsuario.competencia==competencia,
+							   ComissaoUsuario.sequencia==last_sequencia).order_by(ComissaoUsuario.name)
+		return data
+
+	def get_comissoes_lastCompetencia(self):
+		data = date.today()
+		competencia_atual = u'%s/%s' %(data.month,data.year)
+
+		last_competencia = self.store.find(ComissaoUsuario).max(ComissaoVenda.competencia) or competencia_atual
+
+		return self.get_comisoes_byCompetencia(last_competencia)
 
