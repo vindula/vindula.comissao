@@ -12,6 +12,7 @@ from vindula.comissao.tools import convert_csv2list_dict, convert_str2int,\
 from vindula.comissao import MessageFactory as _
 from vindula.comissao.models.comissao_usuario import ComissaoUsuario
 from vindula.comissao.models.comissao_venda import ComissaoVenda
+from vindula.comissao.models.comissao_adicional import ComissaoAdicional
 
 import transaction
 
@@ -170,22 +171,8 @@ class ImportComissaoView(grok.View):
 				 'me_porcentagem': convert_str2int(dados.get('Meta Porcentagem','0').replace('%','')),
 				 'equipe': convert_str2unicode(dados.get('Equipe','')),
 				 'valor_final': convert_str2decimal(dados.get('V. Final','0')),
-
-				 'competencia': convert_str2unicode(dados.get('Competencia','')),
-				 'faltas': convert_str2int(dados.get('Faltas','0')),
-				 'atrasos': convert_str2int(dados.get('Atrasos','0')),
-				 'adicional1': convert_str2decimal(dados.get('Adicional 1','0')),
-				 'head_shot': convert_str2int(dados.get('Head Shot','0')),
-				 'adicional2': convert_str2decimal(dados.get('Adicional 2','0')),
-				 'bv_porcentagem': convert_str2int(dados.get('BV Porcentagem','0').replace('%','')),
-				 'adicional3': convert_str2decimal(dados.get('Adicional 3','0')),
-				 'q_proposta': convert_str2int(dados.get('Q. Proposta','0')),
-				 'media_dia': convert_str2int(dados.get('Dias Uteis','0')),
-				 'adicional4': convert_str2decimal(dados.get('Adicional 4','0')),
-				 'ticket': convert_str2int(dados.get('Tickte','0')),
-				 'adicional5': convert_str2decimal(dados.get('Adicional 5','0')),
+				 'competencia': convert_str2unicode(dados.get('Competencia')),
 				 'sequencia': sequencia,
-
 				}
 
 			if dados.get('Meta Equipe')=='Sim':
@@ -193,7 +180,38 @@ class ImportComissaoView(grok.View):
 			else:
 				D['me_meta'] = False
 
-			ComissaoUsuario().manage_comissao_usuario(**D)
+			id_usuario = ComissaoUsuario().manage_comissao_usuario(**D)
+			E = {}
+			for adicional in dados.keys():
+				if 'Adicional' in adicional:
+					# import pdb;pdb.set_trace()
+					
+					if len(E.keys()) == 5:
+						# ComissaoAdicional().manage_comissao_adicional(**E)
+						E = {}
+
+					E['id_usuario'] = id_usuario
+				
+					adicional_s = adicional.split('-')
+					adicional_v = dados.get(adicional,'')
+
+					if adicional_s[0] == 'Item':
+						if not 'dict_itens' in E.keys():
+							E['dict_itens']	= ''
+							
+						E['dict_itens'] += u"%s:%s|" %(adicional_s[1],adicional_v)
+
+
+					E['valor'] = convert_str2decimal(dados.get('Valor-Adicional-'+adicional_s[-1]))
+
+					valor_direito = dados.get('Direito-Adicional-'+adicional_s[-1])
+					if valor_direito == "SIM":
+						E['direito'] = True
+					else:
+						E['direito'] = False
+
+					E['name'] = convert_str2unicode(dados.get('Nome-Adicional-'+adicional_s[-1]))
+
 			cont += 1
 
 		return cont
@@ -205,14 +223,15 @@ class ImportComissaoView(grok.View):
 
 		for dados in dados_import:
 
-			D = {'ci_usuario': convert_str2unicode(dados.get('agente')),
-				 'competencia': convert_str2unicode(dados.get('competencia')),
-				 'nome_cliente': convert_str2unicode(dados.get('nome_cliente','')),
+			D = {'ci_usuario': convert_str2unicode(dados.get('Agente')),
+				 'competencia': convert_str2unicode(dados.get('Competencia')),
+				 'nr_proposta': convert_str2unicode(dados.get('nro_proposta')),
+				 'nome_cliente': convert_str2unicode(dados.get('Nome_Cliente','')),
 				 'cpf': convert_str2unicode(dados.get('CPF','')),
-				 'data_atd': convert_str2date(dados.get('data_ATD','')),
-				 'situacao': convert_str2unicode(dados.get('Situacoes')),
-				 'situacao_financeiro': convert_str2unicode(dados.get('Situacao Financeiro','')),
-				 'pontos': convert_str2int(dados.get('Pontos Comissoes','')),
+				 'data_atd': convert_str2date(dados.get('Data_ATD','')),
+				 'situacao': convert_str2unicode(dados.get('Situação')),
+				 'situacao_financeiro': convert_str2unicode(dados.get('Situação Financeiro','')),
+				 'pontos': convert_str2int(dados.get('Pontuação Comissões','')),
 				 'sequencia': sequencia,
 				 'aprovado' : convert_str2bool(dados.get('Aprovado',''))
 				}

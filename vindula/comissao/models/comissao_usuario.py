@@ -27,6 +27,7 @@ class ComissaoUsuario(Storm,ComissaoBase):
 	valor_final = Decimal()
 	competencia = Unicode()
 	sequencia = Int()
+	
 	faltas = Int()
 	atrasos = Int()
 	adicional1 = Decimal()
@@ -47,11 +48,12 @@ class ComissaoUsuario(Storm,ComissaoBase):
 
 	@property
 	def vendas(self):
-		sequencia_atual = ComissaoVenda().store.find(ComissaoVenda,
-												 	 ComissaoVenda.competencia==self.competencia).max(ComissaoVenda.sequencia) or 0
+		# sequencia_atual = ComissaoVenda().store.find(ComissaoVenda,
+		# 										 	 ComissaoVenda.competencia==self.competencia).max(ComissaoVenda.sequencia) or 0
 		comissao = ComissaoVenda().store.find(ComissaoVenda, ComissaoVenda.ci_usuario==self.ci,
 											  ComissaoVenda.competencia==self.competencia,
-											  ComissaoVenda.sequencia==sequencia_atual).order_by(ComissaoVenda.data_atd)
+											  # ComissaoVenda.sequencia==sequencia_atual
+											  ComissaoVenda.deleted==False).order_by(ComissaoVenda.data_atd)
 		return comissao
 
 	@property
@@ -106,6 +108,8 @@ class ComissaoUsuario(Storm,ComissaoBase):
 		self.store.add(comissao_usuario)
 		self.store.flush()
 
+		return comissao_usuario.id
+
 
 	def get_comissao_by_cpf(self, cpf_user):
 		data = self.store.find(ComissaoUsuario,
@@ -113,8 +117,8 @@ class ComissaoUsuario(Storm,ComissaoBase):
 		return data
 
 
-	def isValid(self):
-		return ComissaoValidacao().get_comissao_isValid(self.cpf,self.competencia,self.sequencia,'usuario')
+	# def isValid(self):
+	# 	return ComissaoValidacao().get_comissao_isValid(self.cpf,self.competencia,self.sequencia,'usuario')
 
 
 	def get_bloco_importacao_comissao(self):

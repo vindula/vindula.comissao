@@ -27,10 +27,15 @@ class ValidaComissaoView(grok.View, UtilMyvindula):
 			D['cpf'] = prefs_user.get('cpf','')
 			D['username'] = prefs_user.get('username','')
 			D['competencia'] = self.Convert_utf8(form.get('competencia',''))
-			D['sequencia_venda'] = int(form.get('sequencia_venda','0'))
-			D['sequencia_usuario'] = int(form.get('sequencia_usuario','0'))
 
+			D['id_usuario'] = int(form.get('id_usuario','0'))
+			
 			ComissaoValidacao().manage_comissao_validacao(**D)
+			D.pop('id_usuario')
+
+			for venda in form.get('id_venda',[]):
+				D['id_venda'] = int(venda)
+				ComissaoValidacao().manage_comissao_validacao(**D)
 
 			self.request.response.redirect(self.context.absolute_url() + '/minha-comissao')
 

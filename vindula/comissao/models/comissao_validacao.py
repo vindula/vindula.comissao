@@ -14,8 +14,9 @@ class ComissaoValidacao(Storm,ComissaoBase):
 	cpf = Unicode()
 	competencia = Unicode()
 
-	sequencia_venda = Int()
-	sequencia_usuario = Int()
+	id_venda = Int()
+	id_usuario = Int()
+
 	date_created = DateTime()
 
 
@@ -26,18 +27,18 @@ class ComissaoValidacao(Storm,ComissaoBase):
 		self.store.add(comissao_validacao)
 		self.store.flush()
 
-	def get_comissao_isValid(self,cpf,competencia,sequencia,tipo_sequencia):
+	# def get_comissao_isValid(self,cpf,competencia,sequencia,tipo_sequencia):
 
-		data = self.store.find(ComissaoValidacao, ComissaoValidacao.cpf==cpf,
-												  ComissaoValidacao.competencia==competencia)
+	# 	data = self.store.find(ComissaoValidacao, ComissaoValidacao.cpf==cpf,
+	# 											  ComissaoValidacao.competencia==competencia)
 
-		if tipo_sequencia == 'venda':
-			data = data.find(ComissaoValidacao.sequencia_venda==sequencia)
+	# 	# if tipo_sequencia == 'venda':
+	# 	# 	data = data.find(ComissaoValidacao.sequencia_venda==sequencia)
 
-		elif tipo_sequencia == 'usuario':
-			data = data.find(ComissaoValidacao.sequencia_usuario==sequencia)
+	# 	# elif tipo_sequencia == 'usuario':
+	# 	# 	data = data.find(ComissaoValidacao.sequencia_usuario==sequencia)
 
-		if data.count() >= 1:
-			return True
+	# 	if data.count() >= 1:
+	# 		return True
 
-		return False
+	# 	return False

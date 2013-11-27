@@ -73,8 +73,7 @@
 						 			 comissoes view/comissoes|python:[];
 						 			 req_competencia request/id|nothing;
 						 			 prefs_user view/prefs_user|nothing;
-
-						 			 comisao_isValid comissao/isValid|python:False;" >
+						 			 comisao_isValid python:False" >
 
 						<tal:cond condition="comissao|nothing" >
 			
@@ -294,10 +293,8 @@
 										<th class="head">Situações</th>
 										<th class="head">Situações Financeiro</th>
 										<th class="head">Total</th>
-										<tal:cond condition="not: comisao_isValid">
-											<th class="head">Analisar</th>
-											<th class="head">Valida</th>
-										</tal:cond>
+										<th class="head">Analisar</th>
+										<th class="head">Valida</th>
 									</tr>
 									
 									<tal:rep repeat="item comissao/vendas_validas|python:[]">
@@ -310,23 +307,21 @@
 											<td tal:content="item/situacao|string: ">situaçao</td>
 											<td tal:content="item/situacao_financeiro|string: ">situação fina</td>
 											<td tal:content="item/pontos|string: ">pontos</td>
+											<td>
+												<a href="" tal:condition="not: item/is_venda_validada"
+													tal:attributes="href string: ${context/absolute_url}/gerenciar-comissoes?cpf_cliente=${item/cpf}&vendedor=${prefs_user/name}">Enviar</a>
+											</td>
 											
-											<tal:cond condition="not: comisao_isValid">
-												<td>
-													<a href="" tal:attributes="href string: ${context/absolute_url}/gerenciar-comissoes?cpf_cliente=${item/cpf}&vendedor=${prefs_user/name}">Enviar</a>
-												</td>
-												
-												<td>
-													<img src="" alt="Comissão Validada" title="Comissão Validada"
-														 tal:condition="item/aprovado|python:False"
-														 tal:attributes="src string:${view/static_url}/img/ok.gif"
-														 />
-													<img src="" alt="Comissão não Validada" title="Comissão não Validada"
-														 tal:condition="not: item/aprovado|python:True"
-														 tal:attributes="src string:${view/static_url}/img/false.png"
-														 />	 
-												</td>
-											</tal:cond>
+											<td>
+												<img src="" alt="Comissão Validada" title="Comissão Validada"
+													 tal:condition="item/is_venda_validada|python:False"
+													 tal:attributes="src string:${view/static_url}/img/ok.gif"
+													 />
+												<img src="" alt="Comissão não Validada" title="Comissão não Validada"
+													 tal:condition="not: item/is_venda_validada|python:True"
+													 tal:attributes="src string:${view/static_url}/img/false.png"
+													 />	 
+											</td>
 
 										</tr>	
 									</tal:rep>
@@ -350,10 +345,9 @@
 										<th class="head">Situações</th>
 										<th class="head">Situações Financeiro</th>
 										<th class="head">Total</th>
-										<tal:cond condition="not: comisao_isValid">
-											<th class="head">Analisar</th>
-											<th class="head">Valida</th>
-										</tal:cond>
+										<th class="head">Analisar</th>
+										<th class="head">Valida</th>
+
 									</tr>
 									
 									<tal:rep repeat="item comissao/vendas_invalidas|python:[]">
@@ -367,22 +361,22 @@
 											<td tal:content="item/situacao_financeiro|string: ">situação fina</td>
 											<td tal:content="item/pontos|string: ">pontos</td>
 											
-											<tal:cond condition="not: comisao_isValid">
-												<td>
-													<a href="" tal:attributes="href string: ${context/absolute_url}/gerenciar-comissoes?cpf_cliente=${item/cpf}&vendedor=${prefs_user/name}">Enviar</a>
-												</td>
-												<td>
-													<img src="" alt="Comissão Validada" title="Comissão Validada"
-														 tal:condition="item/aprovado|python:False"
-														 tal:attributes="src string:${view/static_url}/img/ok.gif"
-														 />
+											<td>
+												<a tal:condition="not: item/is_venda_validada"
+													href="" tal:attributes="href string: ${context/absolute_url}/gerenciar-comissoes?cpf_cliente=${item/cpf}&vendedor=${prefs_user/name}">Enviar</a>
+											</td>
+											<td>
+												<img src="" alt="Comissão Validada" title="Comissão Validada"
+													 tal:condition="item/is_venda_validada|python:False"
+													 tal:attributes="src string:${view/static_url}/img/ok.gif"
+													 />
 
-													<img src="" alt="Comissão não Validada" title="Comissão não Validada"
-														 tal:condition="not: item/aprovado|python:True"
-														 tal:attributes="src string:${view/static_url}/img/false.png"
-														 />	 
-												</td>
-											</tal:cond>
+												<img src="" alt="Comissão não Validada" title="Comissão não Validada"
+													 tal:condition="not: item/is_venda_validada|python:True"
+													 tal:attributes="src string:${view/static_url}/img/false.png"
+													 />	 
+											</td>
+											
 										</tr>	
 									</tal:rep>
 								</table>
@@ -415,8 +409,6 @@
 
 					</div>
 				</metal:macro>
-
-
 
 		    </div>
 			<div class="visualClear"></div>

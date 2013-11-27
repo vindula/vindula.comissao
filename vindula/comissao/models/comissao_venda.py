@@ -7,6 +7,7 @@ from vindula.comissao.models import ComissaoBase
 
 # from vindula.comissao.models.comissao_usuario import ComissaoUsuario
 
+from vindula.comissao.models.comissao_validacao import ComissaoValidacao
  
 class ComissaoVenda(Storm, ComissaoBase):
 	__storm_table__ = 'vin_comissao_venda'
@@ -14,6 +15,7 @@ class ComissaoVenda(Storm, ComissaoBase):
 	id = Int(primary=True)
 	sequencia = Int()
 	ci_usuario = Unicode()
+	nr_proposta = Unicode()
 	nome_cliente = Unicode()
 	competencia = Unicode()
 	cpf = Unicode()
@@ -24,6 +26,7 @@ class ComissaoVenda(Storm, ComissaoBase):
 	pontos = Int()
 	aprovado = Bool()
 	# comissao_usuario_id = Int()
+	deleted = Bool()
 	date_created = DateTime()
 	date_modified = DateTime()
 
@@ -33,36 +36,42 @@ class ComissaoVenda(Storm, ComissaoBase):
 		numero_atual = self.store.find(ComissaoVenda).max(ComissaoVenda.sequencia) or 0
 		return numero_atual + 1
 	
+	@property
+	def is_venda_validada(self):
+		data = ComissaoVenda().store.find(ComissaoValidacao, ComissaoValidacao.id_venda==self.id)
+		if data.count() >= 1:
+			return True
+
+		return False
+
+
 	def manage_comissao_venda(self, **kwargs):
-		# ci_usuarioc = kwargs.pop('ci_usuario')
-		# competencia = kwargs.pop('competencia') 		
+		ci_usuario = kwargs.get('ci_usuario')
+		competencia = kwargs.get('competencia') 		
+		nr_proposta = kwargs.get('nr_proposta') 
 
-		# data_usuario = self.store.find(ComissaoUsuario,
-		# 							   ComissaoUsuario.ci==ci_agente,
-		#    							   ComissaoUsuario.competencia==competencia).one()
+		data_venda = self.store.find(ComissaoVenda,
+				 				     ComissaoVenda.ci_usuario==ci_usuario,
+		   							 ComissaoVenda.competencia==competencia,
+									 ComissaoVenda.nr_proposta==nr_proposta).one()
+
+		if data_venda:
+			if not data_venda.is_venda_validada:
+				#Marcando como deletada a venda importada anteriormente
+				data_venda.deleted = True
+				self.store.flush()
+
+				#adicionando a nova Importação
+				comissao_venda = ComissaoVenda(**kwargs)
+				self.store.add(comissao_venda)
+				self.store.flush()
+
+		else:
+			comissao_venda = ComissaoVenda(**kwargs)
+			self.store.add(comissao_venda)
+			self.store.flush()
+	
 		
-
-		# if data_usuario:
-		# 	comissao_usuario_id = data_usuario.id
-
-		# 	cpf_cliente = kwargs.get('cpf')
-		# 	data_atd = kwargs.get('data_atd')
-		# 	data = self.store.find(ComissaoVenda,
-		# 						   ComissaoVenda.comissao_usuario_id==comissao_usuario_id,
-		# 						   ComissaoVenda.cpf==cpf_cliente,
-		# 						   ComissaoVenda.data_atd==data_atd).one()
-		# 	if data:
-
-		# 		for attribute, value in kwargs.items():
-		# 			setattr(self,attribute,value)
-
-		# 		self.store.flush()
-		# 	else:
-		# 		kwargs['comissao_usuario_id'] = comissao_usuario_id
-
-		comissao_venda = ComissaoVenda(**kwargs)
-		self.store.add(comissao_venda)
-		self.store.flush()
 
 	def remove_sequencia_venda(self, sequencia):
 		results = self.store.find(ComissaoVenda, ComissaoVenda.sequencia==sequencia)
