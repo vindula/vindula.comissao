@@ -38,7 +38,7 @@ class ComissaoVenda(Storm, ComissaoBase):
 	
 	@property
 	def is_venda_validada(self):
-		data = ComissaoVenda().store.find(ComissaoValidacao, ComissaoValidacao.id_venda==self.id)
+		data = ComissaoVenda().store.find(ComissaoValidacao, ComissaoValidacao.id_usuario==self.id)
 		if data.count() >= 1:
 			return True
 

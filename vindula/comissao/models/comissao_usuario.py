@@ -6,6 +6,7 @@ from storm.locals import *
 from vindula.comissao.models import ComissaoBase
 from vindula.comissao.models.comissao_venda import ComissaoVenda
 from vindula.comissao.models.comissao_validacao import ComissaoValidacao
+from vindula.comissao.models.comissao_adicional import ComissaoAdicional
 
 from datetime import date
  
@@ -27,24 +28,26 @@ class ComissaoUsuario(Storm,ComissaoBase):
 	valor_final = Decimal()
 	competencia = Unicode()
 	sequencia = Int()
-	
-	faltas = Int()
-	atrasos = Int()
-	adicional1 = Decimal()
-	head_shot = Int()
-	adicional2 = Decimal()
-	bv_porcentagem = Int()
-	adicional3 = Decimal()
-	q_proposta = Int()
-	media_dia = Int()
-	adicional4 = Decimal()
-	ticket = Int()
-	adicional5 = Decimal()
 
+	# faltas = Int()
+	# atrasos = Int()
+	# adicional1 = Decimal()
+	# head_shot = Int()
+	# adicional2 = Decimal()
+	# bv_porcentagem = Int()
+	# adicional3 = Decimal()
+	# q_proposta = Int()
+	# media_dia = Int()
+	# adicional4 = Decimal()
+	# ticket = Int()
+	# adicional5 = Decimal()
+	
+	deleted = Bool()
 	date_created = DateTime()
 	date_modified = DateTime()
 
-	# vendas = ReferenceSet(id, "ComissaoVenda.comissao_usuario_id")
+	adicionais = ReferenceSet(id, "ComissaoAdicional.id_usuario")
+
 
 	@property
 	def vendas(self):
@@ -76,6 +79,14 @@ class ComissaoUsuario(Storm,ComissaoBase):
 	def cont_vendas_invalidas(self):
 		return self.vendas_invalidas.count()
 
+	@property
+	def is_usuario_validada(self):
+		data = ComissaoVenda().store.find(ComissaoValidacao, ComissaoValidacao.id_venda==self.id)
+		if data.count() >= 1:
+			return True
+
+		return False
+
 
 	def next_sequencia(self):
 		numero_atual = self.store.find(ComissaoUsuario).max(ComissaoUsuario.sequencia) or 0
@@ -90,35 +101,50 @@ class ComissaoUsuario(Storm,ComissaoBase):
 				self.store.flush()
 
 	def manage_comissao_usuario(self, **kwargs):
-		# competencia = kwargs.get('competencia') 		
+		list_adicional = []
+		cont_adicional = kwargs.pop('cont_adicional')
+		import_adicional = False
 
-		# data = self.store.find(ComissaoUsuario,
-		# 					   ComissaoUsuario.cpf==cpf_user,
-		#    					   ComissaoUsuario.competencia==competencia).one()
-
-		# if data:
-		# 	for attribute, value in kwargs.items():
-		# 		setattr(self,attribute,value)
-
-		# 	self.store.flush()
-		# else:
 		
+		for index_adicional in range(1,cont_adicional+1):
+			list_adicional.append(kwargs.pop('adicional'+str(index_adicional)))
 
-		comissao_usuario = ComissaoUsuario(**kwargs)
-		self.store.add(comissao_usuario)
-		self.store.flush()
+		data_usuario = self.store.find(ComissaoUsuario,
+				 				       ComissaoUsuario.ci==kwargs.get('ci'),
+		   							   ComissaoUsuario.competencia==kwargs.get('competencia'),
+									   ComissaoUsuario.cpf==kwargs.get('cpf'),
+										ComissaoUsuario.deleted==False
+									   ).one()
 
-		return comissao_usuario.id
+		if data_usuario:
+			if not data_usuario.is_usuario_validada:
+				#Marcando como deletada a  comissão do usuario importada anteriormente
+				data_usuario.deleted = True
+				self.store.flush()
+
+				#adicionando a nova Importação
+				comissao_usuario = ComissaoUsuario(**kwargs)
+				self.store.add(comissao_usuario)
+				self.store.flush()
+				import_adicional = True
+		else:
+			comissao_usuario = ComissaoUsuario(**kwargs)
+			self.store.add(comissao_usuario)
+			self.store.flush()
+			import_adicional = True
+
+		if import_adicional:
+			id_usuario = comissao_usuario.id
+			ComissaoAdicional().manage_comissao_adicional(id_usuario,list_adicional)
+
 
 
 	def get_comissao_by_cpf(self, cpf_user):
 		data = self.store.find(ComissaoUsuario,
-							   ComissaoUsuario.cpf==cpf_user).order_by(ComissaoUsuario.competencia)
+							   ComissaoUsuario.cpf==cpf_user,
+							   ComissaoUsuario.deleted==False
+							   ).order_by(ComissaoUsuario.competencia)
 		return data
-
-
-	# def isValid(self):
-	# 	return ComissaoValidacao().get_comissao_isValid(self.cpf,self.competencia,self.sequencia,'usuario')
 
 
 	def get_bloco_importacao_comissao(self):

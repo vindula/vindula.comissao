@@ -16,6 +16,7 @@ class ComissaoValidacao(Storm,ComissaoBase):
 
 	id_venda = Int()
 	id_usuario = Int()
+	id_adicional = Int()
 
 	date_created = DateTime()
 

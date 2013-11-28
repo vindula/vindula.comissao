@@ -11,28 +11,8 @@
 		</metal:styleslot>
 		
 		<metal:js fill-slot="javascript_head_slot">
-        
-	
-			<script type="text/javascript">
+        	<script type="text/javascript" tal:attributes="src string:${view/static_url}/js/comissao.js" />
 				
-				$j(document).ready(function(){
-					var common_content_filter = '#content=*,dl.portalMessage.error,dl.portalMessage.info';
-	    			var common_jqt_config = {fixed:false,speed:'fast',mask:{color:'#000',opacity: 0.4,loadSpeed:0,closeSpeed:0}};
-					
-				    $j('a.validacao').prepOverlay({
-				        subtype: 'ajax',
-				        noform:'reload',
-				        filter: common_content_filter,
-				        closeselector: '[name=form.cancel]',
-				        formselector: '[name=comisao-form]',
-				        width: '50%',
-				        config: common_jqt_config,
-
-				        });
-				});
-			    
-        	</script>
-
         </metal:js>
 
 	</head>
@@ -170,74 +150,37 @@
 								</div>
 								<div class="cell width-6 position-6">
 									
-									<table>
+									<table id="table_adicionais">
 										<tr>
 											<th class="blackwhite head" colspan="5">Painel Comissões - Meta Adicionais</th>
 										</tr>
-										<tr>
-											<td class="bluewhite">Adicional 1</td>
-											<td class="graywhite">Faltas</td>
-											<td class="graywhite">Atrasos</td>
-											<td class="blackwhite" >Direito</td>
-											<td class='grayblack'>Valor</td>
-										</tr>
-										<tr>
-											<td>ABS</td>
-											<td tal:content="comissao/faltas|string: ">0</td>
-											<td tal:content="comissao/atrasos|string: ">0</td>
-											<td></td>
-											<td tal:content="python:view.format_moeda(comissao.adicional1)">200</td>
-										</tr>
-										<tr>
-											<td class="bluewhite">Adicional 2</td>
-											<td class="graywhite" colspan="2" >HS</td>
-											<td class="blackwhite" >Direto</td>
-											<td class='grayblack'>Valor</td>
-										</tr>
-										<tr>
-											<td>Anti-Fraude</td>
-											<td colspan="2" tal:content="comissao/head_shot|string: ">0</td>
-											<td></td>
-											<td tal:content="python:view.format_moeda(comissao.adicional2)">200</td>
-										</tr>
-										<tr>
-											<td class="bluewhite">Adicional 3</td>
-											<td class="graywhite" colspan="2"> % Desist. BV</td>
-											<td class="blackwhite" >Direito</td>
-											<td class='grayblack'>Valor</td>
-										</tr>
-										<tr>
-											<td>Desistente BV</td>
-											<td colspan="2" tal:content="comissao/bv_porcentagem|string: ">18%</td>
-											<td></td>
-											<td tal:content="python:view.format_moeda(comissao.adicional3)">450</td>
-										</tr>
-										<tr>
-											<td class="bluewhite">Adicional 4</td>
-											<td class="graywhite" >Prop.</td>
-											<td class="graywhite">Média/Dia</td>
-											<td class="blackwhite" >Direito</td>
-											<td class='grayblack'>Valor</td>
-										</tr>	
-										<tr>
-											<td>Meta Proposta</td>
-											<td tal:content="comissao/q_proposta|string: ">159</td>
-											<td tal:content="comissao/media_dia|string: ">7</td>
-											<td></td>
-											<td tal:content="python:view.format_moeda(comissao.adicional4)">200</td>
-										</tr>
-										<tr>
-											<td class="bluewhite">Adicional 5</td>
-											<td class="graywhite" colspan="2"> </td>
-											<td class="blackwhite" >Direito</td>
-											<td class='grayblack' >Valor</td>
-										</tr>
-										<tr>
-											<td>Ticket Médio</td>
-											<td colspan="2" tal:content="comissao/ticket|string: "></td>
-											<td></td>
-											<td tal:content="python:view.format_moeda(comissao.adicional5)">800</td>
-										</tr>
+
+										<tal:rep repeat="adicional comissao/adicionais|python:[]">
+
+											<tr>
+												<td class="bluewhite">Adicional <tal:cont content="repeat/adicional/number">1</tal:cont></td>
+												<tal:rep repeat="item adicional/head|python:[]">
+													<td class="graywhite cal_colspan" tal:attributes="data-cont adicional/cont;
+																									  data-last	repeat/item/end;"
+														tal:content="item|string: ">Faltas</td>	
+												</tal:rep>
+												<td class="blackwhite" >Direito</td>
+												<td class='grayblack'>Valor</td>
+											</tr>
+											<tr>
+												<td tal:content="adicional/name|string: ">ABS</td>
+												<tal:rep repeat="item adicional/values|python:[]">
+													<td tal:content="item|string: " class="cal_colspan"
+														tal:attributes="data-cont adicional/cont;
+																		data-last repeat/item/end;">0</td>	
+												</tal:rep>
+												<td tal:content="adicional/direito|string: "></td>
+												<td tal:content="python:view.format_moeda(adicional.valor)">200</td>
+											</tr>
+											
+										</tal:rep>
+
+										
 									</table>
 								
 								</div>

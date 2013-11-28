@@ -88,3 +88,14 @@
 .right {
 	text-align: right;
 }
+
+
+.not-style{
+	padding: 0 !important;
+	margin:0 !important;
+
+}
+
+.not-style tr td{
+	border: none;
+}

@@ -5,6 +5,9 @@ ALTER TABLE `vindula_myvindulaDB`.`vin_comissao_validacao` CHANGE COLUMN `sequen
 
 ALTER TABLE `vindula_myvindulaDB`.`vin_comissao_usuario`   DROP COLUMN `adicional5` , DROP COLUMN `ticket` , DROP COLUMN `adicional4` , DROP COLUMN `media_dia` , DROP COLUMN `q_proposta` , DROP COLUMN `adicional3` , DROP COLUMN `bv_porcentagem` , DROP COLUMN `adicional2` , DROP COLUMN `head_shot` , DROP COLUMN `adicional1` , DROP COLUMN `atrasos` , DROP COLUMN `faltas` , CHANGE COLUMN `pv_total` `pv_total` DECIMAL(10,2) NOT NULL DEFAULT 0.0  , CHANGE COLUMN `valor_inicial` `valor_inicial` DECIMAL(10,2) NOT NULL DEFAULT 0.0  , CHANGE COLUMN `valor_final` `valor_final` DECIMAL(10,2) NOT NULL DEFAULT 0.0  ;
 
+ALTER TABLE `vindula_myvindulaDB`.`vin_comissao_usuario` ADD COLUMN `deleted` TINYINT(1)  NOT NULL DEFAULT FALSE AFTER `name`;
+
+
 CREATE  TABLE IF NOT EXISTS `vindula_myvindulaDB`.`vin_comissao_adicional` (
   `id` INT(11) NOT NULL AUTO_INCREMENT ,
   `name` VARCHAR(45) NOT NULL ,

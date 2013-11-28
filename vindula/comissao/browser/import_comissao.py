@@ -12,7 +12,7 @@ from vindula.comissao.tools import convert_csv2list_dict, convert_str2int,\
 from vindula.comissao import MessageFactory as _
 from vindula.comissao.models.comissao_usuario import ComissaoUsuario
 from vindula.comissao.models.comissao_venda import ComissaoVenda
-from vindula.comissao.models.comissao_adicional import ComissaoAdicional
+
 
 import transaction
 
@@ -180,37 +180,40 @@ class ImportComissaoView(grok.View):
 			else:
 				D['me_meta'] = False
 
-			id_usuario = ComissaoUsuario().manage_comissao_usuario(**D)
-			E = {}
-			for adicional in dados.keys():
-				if 'Adicional' in adicional:
-					# import pdb;pdb.set_trace()
-					
-					if len(E.keys()) == 5:
-						# ComissaoAdicional().manage_comissao_adicional(**E)
-						E = {}
+			cont_adicional = 0
+			for chave in dados.keys():
 
-					E['id_usuario'] = id_usuario
-				
-					adicional_s = adicional.split('-')
-					adicional_v = dados.get(adicional,'')
+				if 'Adicional' in chave:
+			
+					adicional_s = chave.split('-')
+					adcional_n = 'adicional'+adicional_s[-1].replace(' ','')
+					adicional_v = dados.get(chave,'')
+
+					if not adcional_n in D.keys():
+						cont_adicional += 1
+						D[adcional_n] = {}
 
 					if adicional_s[0] == 'Item':
-						if not 'dict_itens' in E.keys():
-							E['dict_itens']	= ''
+						if not 'dict_itens' in D[adcional_n].keys():
+							D[adcional_n]['dict_itens']	= ''
 							
-						E['dict_itens'] += u"%s:%s|" %(adicional_s[1],adicional_v)
+						D[adcional_n]['dict_itens'] += u"%s:%s|" %(adicional_s[1],adicional_v)
+						
+					elif adicional_s[0] == 'Valor':
+						D[adcional_n]['valor'] = convert_str2decimal(adicional_v)
 
+					elif adicional_s[0] == 'Direito':						
 
-					E['valor'] = convert_str2decimal(dados.get('Valor-Adicional-'+adicional_s[-1]))
-
-					valor_direito = dados.get('Direito-Adicional-'+adicional_s[-1])
-					if valor_direito == "SIM":
-						E['direito'] = True
-					else:
-						E['direito'] = False
-
-					E['name'] = convert_str2unicode(dados.get('Nome-Adicional-'+adicional_s[-1]))
+						if "SIM" in adicional_v:
+							D[adcional_n]['direito'] = True
+						else:
+							D[adcional_n]['direito'] = False
+					
+					elif adicional_s[0] == 'Nome':
+						D[adcional_n]['name'] = convert_str2unicode(adicional_v)
+			
+			D['cont_adicional'] = cont_adicional
+			ComissaoUsuario().manage_comissao_usuario(**D)
 
 			cont += 1
 
