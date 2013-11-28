@@ -21,10 +21,13 @@ class ComissaoUsuario(Storm,ComissaoBase):
 	pv_mensal = Int()
 	pv_total = Decimal()
 	pv_meta = Unicode()
-	valor_inicial = Decimal()
+	
 	me_meta = Bool()
 	me_porcentagem = Int()
 	equipe = Unicode()
+
+	valor_inicial = Decimal()
+	valor_gratificacoes = Decimal()
 	valor_final = Decimal()
 	competencia = Unicode()
 	sequencia = Int()

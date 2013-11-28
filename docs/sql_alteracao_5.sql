@@ -1,0 +1,1 @@
+ALTER TABLE `vindula_myvindulaDB`.`vin_comissao_usuario` ADD COLUMN `valor_gratificacoes` DECIMAL(10,2) NOT NULL DEFAULT '0.00'  AFTER `deleted` ;

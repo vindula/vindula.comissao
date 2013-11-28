@@ -168,6 +168,7 @@ class ImportComissaoView(grok.View):
 				 'pv_total': convert_str2int(dados.get('Total','')),
 				 'pv_meta': convert_str2unicode(dados.get('Meta','')),
 				 'valor_inicial': convert_str2decimal(dados.get('Valor Inicial','')),
+				 'valor_gratificacoes': convert_str2decimal(dados.get('Gratificações','')),
 				 'me_porcentagem': convert_str2int(dados.get('Meta Porcentagem','0').replace('%','')),
 				 'equipe': convert_str2unicode(dados.get('Equipe','')),
 				 'valor_final': convert_str2decimal(dados.get('V. Final','0')),
