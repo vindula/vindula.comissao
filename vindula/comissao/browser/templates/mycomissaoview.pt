@@ -174,7 +174,7 @@
 														tal:attributes="data-cont adicional/cont;
 																		data-last repeat/item/end;">0</td>	
 												</tal:rep>
-												<td tal:content="adicional/direito|string: "></td>
+												<td tal:content="python: adicional.direito and 'Sim' or 'Não'"></td>
 												<td tal:content="python:view.format_moeda(adicional.valor)">200</td>
 											</tr>
 											
@@ -195,7 +195,7 @@
 											<td class="blackwhite" >%</td>
 										</tr>
 										<tr>
-											<td tal:content="comissao/me_meta|string: ">Não</td>
+											<td tal:content="python: comissao.me_meta and 'Sim' or 'Não' ">Não</td>
 											<td tal:define="valor comissao/me_porcentagem|string:0"
 												tal:content="string:${valor}%">0%</td>
 										</tr>

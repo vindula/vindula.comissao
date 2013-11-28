@@ -35,7 +35,7 @@ $j(document).ready(function(){
 		}
 	});
 
-	$j('#table_adicionais tr th').attr('colspan',$j('#table_adicionais tr:last td').length)
+	$j('#table_adicionais tr th').attr('colspan',parseInt(max_colspan)+3)
 
 
 });
