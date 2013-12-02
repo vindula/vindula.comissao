@@ -143,10 +143,14 @@ class ComissaoUsuario(Storm,ComissaoBase):
 
 
 	def get_comissao_by_cpf(self, cpf_user):
-		data = self.store.find(ComissaoUsuario,
-							   ComissaoUsuario.cpf==cpf_user,
-							   ComissaoUsuario.deleted==False
-							   ).order_by(ComissaoUsuario.competencia)
+		cpf_user_clear = cpf_user.replace('.','').replace('-','')
+		cpf_user_format  =  "%s.%s.%s-%s" %(cpf_user_clear[0:3],cpf_user_clear[3:6],cpf_user_clear[6:9],cpf_user_clear[9:11])
+
+		expressions = [ComissaoUsuario.cpf==cpf_user, ComissaoUsuario.cpf==cpf_user_clear,ComissaoUsuario.cpf==cpf_user_format]
+        data = self.store.find(ComissaoUsuario, Or(*expressions),
+                                                ComissaoUsuario.deleted==False
+                                                ).order_by(ComissaoUsuario.competencia)
+
 		return data
 
 
