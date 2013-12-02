@@ -147,9 +147,9 @@ class ComissaoUsuario(Storm,ComissaoBase):
 		cpf_user_format  =  "%s.%s.%s-%s" %(cpf_user_clear[0:3],cpf_user_clear[3:6],cpf_user_clear[6:9],cpf_user_clear[9:11])
 
 		expressions = [ComissaoUsuario.cpf==cpf_user, ComissaoUsuario.cpf==cpf_user_clear,ComissaoUsuario.cpf==cpf_user_format]
-        data = self.store.find(ComissaoUsuario, Or(*expressions),
-                                                ComissaoUsuario.deleted==False
-                                                ).order_by(ComissaoUsuario.competencia)
+		data = self.store.find(ComissaoUsuario, Or(*expressions),
+												ComissaoUsuario.deleted==False
+												).order_by(ComissaoUsuario.competencia)
 
 		return data
 
