@@ -18,29 +18,18 @@ class ListaComissaoView(grok.View, UtilMyvindula):
 	grok.require('zope2.View')
 	grok.name('lista-comissao')
 
-
+	def static_url(self):
+		url_portal = self.context.portal_url()
+		return url_portal + '/++resource++vindula.comissao'
 
 	def lista_usuarios(self):
 		# data = date.today()
 		# competencia = u'%s/%s' %(data.month,data.year)
 
 		return self.rs_to_list(ComissaoUsuario().get_comissoes_lastCompetencia())
-	
+
 
 	def  rs_to_list(self,rs):
 		if rs:
 			return [i for i in rs]
 		return []
-
-
-
-	# def prefs_user(self, cpf_usuario):
-	# 	dados = ModelsDadosFuncdetails().get_DadosFuncdetails_byValueAndField(cpf_usuario,u'cpf')
-	# 	if dados.count() == 0:
-	# 		dados = ModelsDadosFuncdetails().get_DadosFuncdetails_byValueAndField(cpf_usuario,u'teaching_research')
-
-	# 		if dados.count() >= 1:
-	# 			username = dados[0].instance.username
-	# 			return self.get_prefs_user(username)
-
-	# 	return {}

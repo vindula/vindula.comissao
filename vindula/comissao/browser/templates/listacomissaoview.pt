@@ -47,7 +47,15 @@
 									<td tal:content="item/cont_vendas_invalidas">100</td>
 
 									<td>
-										OK
+										<img src="" alt="Comissão Validada" title="Comissão Validada"
+													 tal:condition="item/is_usuario_validada|python:False"
+													 tal:attributes="src string:${view/static_url}/img/ok.gif"
+													 />
+
+										<img src="" alt="Comissão não Validada" title="Comissão não Validada"
+											 tal:condition="not: item/is_usuario_validada|python:True"
+											 tal:attributes="src string:${view/static_url}/img/false.png"
+											 />	 
 									</td>
 
 								</tr>							
